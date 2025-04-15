@@ -33,7 +33,7 @@ export default defineConfig({
 
 Using [gh-pages](https://github.com/tschaub/gh-pages), we will create a parallel branch with the files that Github pages need
 
-### 1. Update vite.config.ts
+**1. Update vite.config.ts**
    
 Set base to the repo name: `vite-tailwind`
 ```ts
@@ -44,16 +44,16 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/vite-tailwind/"
+  base: "/vite-react-tailwind/"
 })
 ```
 
-### 2. Install gh-pages
+**2. Install gh-pages**
 ```sh
 npm install gh-pages --save-dev
 ```
 
-### 3. Update package.json
+**3. Update package.json**
 Update package.json with the following predeploy, deploy scripts and the homepage
 
 ```json
@@ -69,20 +69,19 @@ Update package.json with the following predeploy, deploy scripts and the homepag
   ...
 }
 ```
-### 4. Run Deploy
+
+**4. Run Deploy**
 Create the branch `gh-pages` with the github page
 ```sh
 npm run deploy
 ```
 
-### 5. Setup github pages in Github
-
+**5. Setup github pages in Github**
 * Go to https://github.com/pablorotten/vite-react-tailwind/settings/pages
 * In Build and deployment select the branch `gh-pages` and save
 * Go to https://pablorotten.github.io/vite-react-tailwind/
 
-![alt text](readme/image.png)
-### 6. Update the page
+**6. Update the page**
 Everytime you need to update the page, just
 ```sh
 npm run deploy
