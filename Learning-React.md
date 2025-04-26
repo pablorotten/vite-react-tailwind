@@ -7,7 +7,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
 
 The **entry point** is a simple `html` that calls a first `JSX` file, `main.tsx`.
 
-From that inital `main.tsx` we keep calling other components until we can render the whole page.
+From that initial `main.tsx` we keep calling other components until we can render the whole page.
 
 `index.html`
 ```html
@@ -153,9 +153,9 @@ Use it directly passing the parameters or using JS spread operator `...Array` if
 
 #### Component composition
 
-When using a components, anything inside the declaration `<Component> Here! <Component/>` is send to the Component constructor in the **prop** `props.children`
+When using a components, anything inside the declaration `<Component> Here! <Component/>` is send to the Component constructor in the **prop** `props.children`.
 
-Usefull to send text:
+Useful to send text:
 ```tsx
 // TabButton.tsx
 export default function TabButton() {
@@ -225,6 +225,58 @@ function handleSelect() {
 </ul>
 ```
 
+## Update the UI: states
+
+To tell React that it has to re-render a component, we need to use the hook `useState()`. 
+
+```tsx
+const [currentStateValue, updatingFunction] = useState('initialValue');
+```
+
+A hook is a function that must be used at top level of a `component`.
+
+We pass the initial value to `useState(initialValue)` and it returns 2 things: 
+- `currentStateValue`: the current state value that may change next time the function is executed
+- `updatingFunction()`: 
+  - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue` updating it
+  - It can also accept **another** function whose result will be stored in  `currentStateValue` updating it's value.
+  - The fact that `currentStateValue` is updated, will trigger React to render again the **component**
+  - If `currentStateValue` is used in the view, it will be rendered with the updated value
+
+Initially count is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time user clicks on button, it will add 1 to count and re-render the component:
+```tsx
+import { useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    ...
+    <button onClick={() => setCount((count) => count + 1)}>
+      count is {count}
+    </button>
+    ...
+  )
+```
+
+We can also use setCount inside a function and just pass the new value to it:
+
+```tsx
+function App() {
+  const [selectedTopic, setSelectedTopic] = useState();
+
+  function handleSelect(selectedButton) {
+    setSelectedTopic(selectedButton);
+  }
+
+  ...
+  return (
+    ...
+    <TabButton onSelect={() => handleSelect('components')}>
+      Components
+    </TabButton>
+```
+
 ### Functions with parameters
 
 The anonymous function we pass to the component can have parameters:
@@ -268,7 +320,7 @@ import viteLogo from "/vite.svg";
 
 - File has same name as **Component**
 - **Components** are under `src/components` folder. You can add as many subfolder as you want but remember to adapt the paths
-- Export the component to make them accesible for other components 
+- Export the component to make them accessible for other components 
 ```tsx
 // In src/components/YourComponent.tsx
 import reactLogo from "../assets/react.svg"; // adapt url to ../assets
@@ -279,7 +331,7 @@ export default function YourComponent() { ... }
 import Header from "./components/YourComponent.tsx";
 ```
 - Style files (CSS) related to a component are next to it using the same name
-  - ❗Styles defined in a CSS component **will be applyied to the whole App!!**
+  - ❗Styles defined in a CSS component **will be applied to the whole App!!**
 
 ![alt text](image.png)
 
