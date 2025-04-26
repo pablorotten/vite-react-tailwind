@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://pablorotten.github.io/vite-tailwind/",
+  "homepage": "https://pablorotten.github.io/vite-react-tailwind/",
   "scripts": {
     "predeploy" : "npm run build",
     "deploy" : "gh-pages -d dist",
