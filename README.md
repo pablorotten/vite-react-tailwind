@@ -4,7 +4,7 @@ How to setup a basic React + Vite + Tailwind in TypeScript using `npm`.
 
 For the React tutorial [go here](Learning-React.md)
 
-## Installation
+## Installation and lauch
 
 Install `vite` with `react` 
 
@@ -14,6 +14,7 @@ cd vite-tailwind
 volta pin node@20
 volta pin npm@bundled
 npm install
+npm run dev
 ```
 
 ## Add Tailwind
