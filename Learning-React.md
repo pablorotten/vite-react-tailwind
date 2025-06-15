@@ -3,6 +3,21 @@
 https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
 
 
+- [Learning-React](#learning-react)
+  - [1. React rendering workflow](#1-react-rendering-workflow)
+    - [The complete workflow:](#the-complete-workflow)
+  - [2. Concepts](#2-concepts)
+    - [Component](#component)
+    - [Props (properties)](#props-properties)
+      - [Component composition](#component-composition)
+  - [3. Events](#3-events)
+  - [Update the UI: states](#update-the-ui-states)
+    - [Functions with parameters](#functions-with-parameters)
+  - [Good practices](#good-practices)
+    - [Import images as and use them as variables:](#import-images-as-and-use-them-as-variables)
+    - [Each `Component` must be in a separate file](#each-component-must-be-in-a-separate-file)
+
+
 ## 1. React rendering workflow
 
 The **entry point** is a simple `html` that calls a first `JSX` file, `main.tsx`.
