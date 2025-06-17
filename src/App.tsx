@@ -4,13 +4,26 @@ import Header from "./components/Header";
 
 function App() {
   const [count, setCount] = useState(0);
+  const [isEven, setIsEven] = useState(false);
+
+  function handleCount() {
+    setCount((count) => count + 1)
+    handleIsEven();
+  }
+
+  function handleIsEven() { 
+    setIsEven(count % 2 === 0);
+  }
 
   return (
     <>
       <Header />
       <main>
         <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
+          <button 
+            onClick={handleCount}
+            className={`clear-button ${isEven ? 'even' : 'odd'}`}
+          >
             count is {count}
           </button>
           <p>

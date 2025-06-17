@@ -42,3 +42,16 @@
 .read-the-docs {
   color: #888;
 }
+
+.even {
+  background: linear-gradient(40deg, #eaff00, #adbd00, #027f97, #03d5ff);
+}
+
+.odd {
+  background: linear-gradient(40deg, #ff00b3, #ff6f00, #ffb300, #ff00a8);
+}
+
+.clear-button {
+  font-size: 1em;
+  color: #f2f6ed;
+}

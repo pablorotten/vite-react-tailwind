@@ -11,8 +11,12 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Props (properties)](#props-properties)
       - [Component composition](#component-composition)
   - [3. Events](#3-events)
-  - [Update the UI: states](#update-the-ui-states)
+  - [4. Update the UI: States](#4-update-the-ui-states)
     - [Functions with parameters](#functions-with-parameters)
+  - [5. Styling](#5-styling)
+    - [Inline styles](#inline-styles)
+    - [Conditional styles](#conditional-styles)
+    - [Scope CSS to Modules](#scope-css-to-modules)
   - [Good practices](#good-practices)
     - [Import images as and use them as variables:](#import-images-as-and-use-them-as-variables)
     - [Each `Component` must be in a separate file](#each-component-must-be-in-a-separate-file)
@@ -240,7 +244,7 @@ function handleSelect() {
 </ul>
 ```
 
-## Update the UI: states
+## 4. Update the UI: States
 
 To tell React that it has to re-render a component, we need to use the hook `useState()`. 
 
@@ -319,6 +323,59 @@ return (
 )
 ```
 
+## 5. Styling
+  
+> [!WARNING]  
+> Remember that styles defined in a CSS component **will be applied to the whole App!!**
+
+### Inline styles
+
+Set style directly in a component TS code:
+```ts
+<h2>I have default h2 style</h2>
+<h2 style={{
+  color: '#a1ef06',
+  background: '#ea00ff' 
+}}>I have inline h2 style</h2>
+```
+
+### Conditional styles
+
+You can define a condition in the style based on a property. 
+Can do the same with classes, but remember to return an `undefined` class for one of the cases.
+
+```ts
+const emailNotValid = submitted && !enteredEmail.includes('@');
+
+return (
+  ...
+  <input
+    type="email"
+    style={emailNotValid ? 'red' : 'green'}
+    className={emailNotValid ? 'invalid' : undefined}
+    onChange={(event) => handleInputChange('email', event.target.value)}
+  />
+)
+```
+
+To mix conditional and permanent classes:
+
+```ts
+<input
+  type="email"
+  className={`label ${emailNotValid ? 'invalid' : ''}`}
+/>
+```
+
+### Scope CSS to Modules
+
+Convert the css files into modules. Then you can import them as an objects in the **components** and use the css classes as properties to apply them to different elements
+
+```ts
+import classes from ./Header.module.css
+...
+<p className={classes.paragraph}>
+```
 
 ## Good practices
 
