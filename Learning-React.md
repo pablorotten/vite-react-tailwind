@@ -17,6 +17,8 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Inline styles](#inline-styles)
     - [Conditional styles](#conditional-styles)
     - [Scope CSS to Modules](#scope-css-to-modules)
+    - [Styled components](#styled-components)
+      - [Conditions in styled components](#conditions-in-styled-components)
   - [Good practices](#good-practices)
     - [Import images as and use them as variables:](#import-images-as-and-use-them-as-variables)
     - [Each `Component` must be in a separate file](#each-component-must-be-in-a-separate-file)
@@ -375,6 +377,56 @@ Convert the css files into modules. Then you can import them as an objects in th
 import classes from ./Header.module.css
 ...
 <p className={classes.paragraph}>
+```
+
+### Styled components
+
+Use styled components to re-define html tags with specific style.
+
+Install and import:
+```sh
+npm install styled-components
+```
+```ts
+import { styled } from 'styled-components';
+```
+
+Create and use tagged templates in `components`. For example here we re-define the `input` element
+```ts
+const Input = styled.input`
+  width: 100%;
+  padding: 0.75rem 1rem;
+`;
+
+return (
+  ...
+    <Input
+      type="email"
+      className={emailNotValid ? 'invalid' : undefined}
+    />
+```
+
+`Input` will be replaced with an `input` with the defined properties. Then you can delete the input css rules.
+
+#### Conditions in styled components
+
+All the properties defined inside a Styled component are accesible from the component itself. This can be used to define conditions. Those properties needs a `$` before the name
+
+For example here:
+1. Input is used with the property `$invalid`
+2. `$invalid` value depends on the function `passwordNotValid`
+3. We use `$invalid` value as condition for the color
+
+```ts
+const Input = styled.input`
+  color: ${({ $invalid }) => ($invalid ? '#ef4444' : '#374151')};
+`;
+const passwordNotValid = submitted && enteredPassword.trim().length < 6;
+
+return (
+  ...
+  <Input $invalid={passwordNotValid}/>
+
 ```
 
 ## Good practices
