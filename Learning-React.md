@@ -19,6 +19,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Scope CSS to Modules](#scope-css-to-modules)
     - [Styled components](#styled-components)
       - [Conditions in styled components](#conditions-in-styled-components)
+  - [Debugging react apps](#debugging-react-apps)
   - [Good practices](#good-practices)
     - [Import images as and use them as variables:](#import-images-as-and-use-them-as-variables)
     - [Each `Component` must be in a separate file](#each-component-must-be-in-a-separate-file)
@@ -428,6 +429,11 @@ return (
   <Input $invalid={passwordNotValid}/>
 
 ```
+
+## Debugging react apps
+- Find the sources in chrome dev tools and put breakpoint
+- StrictMode every component is executed twice
+- ReactDevTools: Install the extension
 
 ## Good practices
 
