@@ -10,6 +10,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Component](#component)
     - [Props (properties)](#props-properties)
       - [Component composition](#component-composition)
+    - [Fragment](#fragment)
   - [3. Events](#3-events)
   - [4. Update the UI: States](#4-update-the-ui-states)
     - [Functions with parameters](#functions-with-parameters)
@@ -199,6 +200,45 @@ export default function TabButton({children}) {
     {children}
   </button>
 }
+```
+
+### Fragment
+
+A TSX value must have only one root element. For example, the following code would be invalid and cause an error:
+
+```tsx
+return (
+  <h2>Welcome!</h2>
+  <p>React is awesome!</p>
+);
+```
+
+With "React Fragment" you can solve this without adding extra elements on the page like `div`
+
+```tsx
+import { Fragment } from 'react';
+ 
+// ... other code ...
+ 
+return (
+  <Fragment>
+    <h2>Welcome!</h2>
+    <p>React is awesome!</p>
+  </Fragment>
+);
+
+```
+Shorter form:
+
+```tsx
+// no import needed
+ 
+return (
+  <>
+    <h2>Welcome!</h2>
+    <p>React is awesome!</p>
+  </>
+);
 ```
 
 ## 3. Events
