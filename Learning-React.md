@@ -12,8 +12,10 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
       - [Component composition](#component-composition)
     - [Fragment](#fragment)
   - [3. Events](#3-events)
-  - [4. Update the UI: States](#4-update-the-ui-states)
+  - [4. Update the UI](#4-update-the-ui)
+    - [States](#states)
     - [Functions with parameters](#functions-with-parameters)
+    - [Refs](#refs)
   - [5. Styling](#5-styling)
     - [Inline styles](#inline-styles)
     - [Conditional styles](#conditional-styles)
@@ -287,7 +289,9 @@ function handleSelect() {
 </ul>
 ```
 
-## 4. Update the UI: States
+## 4. Update the UI
+
+### States
 
 To tell React that it has to re-render a component, we need to use the hook `useState()`. 
 
@@ -365,6 +369,8 @@ return (
   ...
 )
 ```
+
+### Refs
 
 ## 5. Styling
   
