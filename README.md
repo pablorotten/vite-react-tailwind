@@ -2,6 +2,8 @@
 
 This is a sandbox to play with React + Vite + Tailwind in TypeScript using `npm`.
 
+See it live [🌍 Here](https://pablorotten.github.io/vite-react-tailwind/)
+
 ## 🤓 React [tutorial](Learning-React.md)
 
 I'm also writting a react tutorial [go here 📝](Learning-React.md)
