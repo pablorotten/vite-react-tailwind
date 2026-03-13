@@ -1,8 +1,12 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite 🔨 Sandbox
 
-How to setup a basic React + Vite + Tailwind in TypeScript using `npm`.
+This is a sandbox to play with React + Vite + Tailwind in TypeScript using `npm`.
 
-For the React tutorial [go here](Learning-React.md)
+See it live [🌍 Here](https://pablorotten.github.io/vite-react-tailwind/)
+
+## 🤓 React tutorial
+
+I'm also writting a react tutorial [go here 📝](Learning-React.md)
 
 ## Installation and lauch
 
