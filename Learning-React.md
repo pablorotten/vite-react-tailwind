@@ -372,6 +372,35 @@ return (
 
 ### Refs
 
+The hook `useRef()` allows us to get a reference to an element in the DOM and manipulate it directly.
+
+```tsx
+import { useRef } from "react";
+...
+
+export default function YourComponent() {
+  // theReference will point to an Input. It's initialized with `null`
+  const theReference = useRef<HTMLInputElement>(null);
+
+  // small function to focus the referenced Input. Might be null, that's why the `?`
+  function focusReferencedInput() {
+    theReference.current?.focus();
+  }
+
+  // ✅ Here is when we connect the pointer `theReference` to the Input element. 
+  return (
+    ...
+    <Input
+      ref={theReference}
+      ...
+    />
+    ...
+    // And finally, this is just a button to call the function that focuses the Input
+    <button type="button" className="text-button" onClick={focusReferencedInput}>
+      Focus Email
+    </button>
+```
+
 ## 5. Styling
   
 > [!WARNING]  
@@ -428,9 +457,8 @@ import classes from ./Header.module.css
 
 ### Styled components
 
-Use styled components to re-define html tags with specific style.
+Define the styles of the elements inside the `Component` file instead of in a separate css file.
 
-Install and import:
 ```sh
 npm install styled-components
 ```
@@ -438,7 +466,7 @@ npm install styled-components
 import { styled } from 'styled-components';
 ```
 
-Create and use tagged templates in `components`. For example here we re-define the `input` element
+For example here we re-define the `<Input>` element 
 ```ts
 const Input = styled.input`
   width: 100%;
@@ -453,7 +481,7 @@ return (
     />
 ```
 
-`Input` will be replaced with an `input` with the defined properties. Then you can delete the input css rules.
+`Input` will be replaced with an `input` with the defined properties **only in the current component**. Then you can delete the input css rules.
 
 #### Conditions in styled components
 
