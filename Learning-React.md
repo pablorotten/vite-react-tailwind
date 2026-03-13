@@ -100,6 +100,37 @@ export default App;
 
 ## 2. Concepts
 
+> [!WARNING]  
+> TODO: Format this section
+
+Component-based architecture:
+Everything is a component—small, reusable pieces that build your UI.
+
+Declarative rendering:
+You describe what the UI should look like for a given state, not how to update it step by step.
+
+State and props:
+
+State: Data managed inside a component (changes trigger re-render).
+Props: Data passed from parent to child (read-only for the child).
+Hooks:
+
+useState: For stateful values.
+useEffect: For side effects (fetching, subscriptions, etc.).
+useRef: For DOM access or persistent values.
+Event handling:
+Functions are passed to elements/components as props, and called on events (like clicks).
+
+Controlled vs uncontrolled components:
+Controlled: React manages the value (e.g., input with value prop).
+Uncontrolled: DOM manages the value (e.g., input with ref).
+
+Component composition:
+Components can contain other components, and you can pass children or functions as props.
+
+Styling:
+You can use CSS, CSS modules, or styled-components—React doesn’t enforce a style method.
+
 ### Component
 
 `Header.tsx`
