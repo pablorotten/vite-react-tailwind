@@ -15,12 +15,13 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
   - [4. Update the UI](#4-update-the-ui)
     - [States](#states)
     - [Functions with parameters](#functions-with-parameters)
-    - [Refs](#refs)
-  - [5. Styling](#5-styling)
-    - [Inline styles](#inline-styles)
+    - [useRef()](#useref)
+  - [Styling](#styling)
+    - [How apply styles to a component](#how-apply-styles-to-a-component)
+      - [CSS Components (👎 not recommended)](#css-components--not-recommended)
+      - [Inline styles (👍 acceptable)](#inline-styles--acceptable)
+      - [CSS Modules (👍👍 best option)](#css-modules--best-option)
     - [Conditional styles](#conditional-styles)
-    - [Scope CSS to Modules](#scope-css-to-modules)
-    - [Styled components](#styled-components)
       - [Conditions in styled components](#conditions-in-styled-components)
   - [Debugging react apps](#debugging-react-apps)
   - [Good practices](#good-practices)
@@ -401,7 +402,7 @@ return (
 )
 ```
 
-### Refs
+### useRef()
 
 The hook `useRef()` allows us to get a reference to an element in the DOM and manipulate it directly.
 
@@ -432,20 +433,105 @@ export default function YourComponent() {
     </button>
 ```
 
-## 5. Styling
-  
+## Styling
+
+### How apply styles to a component
+
+#### CSS Components (👎 not recommended)
+
+Define the styles in a separate CSS file and import it in the component. 
+
+* ✅ Easy to implement
+* ❌ Styles are global and will be applied to the whole App, not just the component
+
+**MyComponent.css**
+```css
+.red-label {
+  color: red;
+}
+```
+
+**MyComponent.tsx**
+```tsx
+import "./MyComponent.css";
+...
+export default function MyComponent() {
+  return (
+    <label className="red-label">
+      This text will be red
+    </label>
+  );
+}
+```
+
 > [!WARNING]  
 > Remember that styles defined in a CSS component **will be applied to the whole App!!**
+ 
+**MyOtherComponent.tsx**
+```tsx
+export default function MyOtherComponent() {
+  return (
+    <label className="red-label">
+      This text will be red in ALL THE COMPONENTS because the styles are global
+    </label>
+  );
+}
+```
 
-### Inline styles
+#### Inline styles (👍 acceptable)
 
-Set style directly in a component TS code:
-```ts
-<h2>I have default h2 style</h2>
-<h2 style={{
-  color: '#a1ef06',
-  background: '#ea00ff' 
-}}>I have inline h2 style</h2>
+Set style directly in a `Component.tsx` code
+
+* ✅ Styles scoped to the current component
+* ✅ Compatible with conditional styles logic
+* ❌ Adds runtime overhead because styles are created on every render
+* ❌ Generates classnames that are hard to debug
+
+**MyComponent.tsx**
+```tsx
+import { styled } from 'styled-components';
+...
+const RedLabel = styled.label`
+  color: red;
+`;
+...
+export default function MyComponent() {
+  return (
+    <RedLabel>
+      This text will be red only in this component
+    </RedLabel>
+  );
+}
+```
+#### CSS Modules (👍👍 best option)
+
+Define the styles of a Component in a file with the same name. Then import the styles as an object and use the properties of that object to apply the styles to the elements.
+
+* ✅ Styles are scoped to the current component
+* ✅ Styles are reusable and easy to maintain
+* ✅ No runtime overhead because styles are generated at build time
+
+> [!INFO]
+> If your class has special characters like `-` you need to use square brackets to access it: `styles['my-class']` instead of `styles.my-class`
+
+**MyComponent.module.css**
+```css
+.red-label {
+  color: red;
+}
+```
+
+**MyComponent.tsx**
+```tsx
+import styles from "./MyComponent.module.css";
+...
+export default function MyComponent() {
+  return (
+    <label className={styles['red-label']}>
+      This text will be red only in this component
+    </label>
+  );
+}
 ```
 
 ### Conditional styles
@@ -454,14 +540,26 @@ You can define a condition in the style based on a property.
 Can do the same with classes, but remember to return an `undefined` class for one of the cases.
 
 ```ts
-const emailNotValid = submitted && !enteredEmail.includes('@');
+const isValid: boolean = !enteredEmail.includes('@');
+
+// conditional inline style
+const InvalidLabel = styled.label`
+  color: ${({ isValid }) => (isValid ? 'green' : 'red')};
+`;
 
 return (
   ...
+  
+  <InvalidLabel isValid={isValid} >
+    Entered mail is {isValid ? 'valid' : 'invalid'}
+  </InvalidLabel>
+
   <input
     type="email"
-    style={emailNotValid ? 'red' : 'green'}
-    className={emailNotValid ? 'invalid' : undefined}
+    // conditional color
+    style={{ color: checkIfValid ? 'red' : 'green' }}
+    // conditional class
+    className={checkIfValid ? 'invalid' : undefined}
     onChange={(event) => handleInputChange('email', event.target.value)}
   />
 )
@@ -472,47 +570,10 @@ To mix conditional and permanent classes:
 ```ts
 <input
   type="email"
-  className={`label ${emailNotValid ? 'invalid' : ''}`}
+  className={`label ${checkIfValid ? 'invalid' : ''}`}
 />
 ```
 
-### Scope CSS to Modules
-
-Convert the css files into modules. Then you can import them as an objects in the **components** and use the css classes as properties to apply them to different elements
-
-```ts
-import classes from ./Header.module.css
-...
-<p className={classes.paragraph}>
-```
-
-### Styled components
-
-Define the styles of the elements inside the `Component` file instead of in a separate css file.
-
-```sh
-npm install styled-components
-```
-```ts
-import { styled } from 'styled-components';
-```
-
-For example here we re-define the `<Input>` element 
-```ts
-const Input = styled.input`
-  width: 100%;
-  padding: 0.75rem 1rem;
-`;
-
-return (
-  ...
-    <Input
-      type="email"
-      className={emailNotValid ? 'invalid' : undefined}
-    />
-```
-
-`Input` will be replaced with an `input` with the defined properties **only in the current component**. Then you can delete the input css rules.
 
 #### Conditions in styled components
 

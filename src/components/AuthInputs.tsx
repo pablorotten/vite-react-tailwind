@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { styled } from "styled-components";
 import "./AuthInputs.css";
+import styles from "./AuthInputs.module.css";
 
 interface InputProps {
   $invalid?: boolean;
@@ -26,7 +27,7 @@ const ControlContainer = styled.div`
   margin-bottom: 1.5rem;
 `;
 
-const Label = styled.label<InputProps>`
+const MyLabel = styled.label<InputProps>`
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.75rem;
@@ -56,6 +57,25 @@ const Input = styled.input<InputProps>`
     0 1px 2px 0 rgba(0, 0, 0, 0.06);
 `;
 
+const CSSInlineDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const CSSInlineLabel = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b7280;
+  background-color: purple;
+`;
+
 export default function AuthInputs() {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
@@ -78,44 +98,68 @@ export default function AuthInputs() {
     setSubmitted(true);
   }
 
-  const emailNotValid = submitted && !enteredEmail.includes("@");
+  const emailNotValid: boolean = submitted && !enteredEmail.includes("@");
   const passwordNotValid = submitted && enteredPassword.trim().length < 6;
 
   return (
     <AuthInputsContainer>
-      <ControlContainer className="controls">
+      <ControlContainer className={styles.controls}>
         <p>
-          <Label $invalid={emailNotValid}>Email</Label>
+          <MyLabel
+            $invalid={emailNotValid}
+            className={emailNotValid ? styles.invalid : undefined}
+          >
+            Email
+          </MyLabel>
           <Input
             ref={emailInputRef}
             $invalid={emailNotValid}
             type="email"
-            className={emailNotValid ? "invalid" : undefined}
+            className={emailNotValid ? styles.invalid : undefined}
             onChange={(event) => handleInputChange("email", event.target.value)}
           />
         </p>
         <p>
-          <Label $invalid={passwordNotValid}>Password</Label>
+          <MyLabel
+            $invalid={passwordNotValid}
+            className={passwordNotValid ? styles.invalid : undefined}
+          >
+            Password
+          </MyLabel>
           <Input
             $invalid={passwordNotValid}
             type="password"
-            className={passwordNotValid ? "invalid" : undefined}
+            className={passwordNotValid ? styles.invalid : undefined}
             onChange={(event) =>
               handleInputChange("password", event.target.value)
             }
           />
         </p>
       </ControlContainer>
-      <div className="actions">
-        <button type="button" className="text-button" onClick={focusEmail}>
+      <div className={styles.actions}>
+        <button
+          type="button"
+          className={styles["text-button"]}
+          onClick={focusEmail}
+        >
           Focus Email
         </button>
-        <button type="button" className="text-button">
+        <button type="button" className={styles["text-button"]}>
           Create a new account
         </button>
-        <button className="button" onClick={handleLogin}>
+        <button className={styles.button} onClick={handleLogin}>
           Sign In
         </button>
+      </div>
+
+      <div className="css-component-controls">
+        <label className="css-component">Classic CSS Style 👎</label>
+      </div>
+      <CSSInlineDiv>
+        <CSSInlineLabel>Inline Style 👍</CSSInlineLabel>
+      </CSSInlineDiv>
+      <div className={styles["css-module-controls"]}>
+        <label>CSS Module Styled 👍👍</label>
       </div>
     </AuthInputsContainer>
   );
