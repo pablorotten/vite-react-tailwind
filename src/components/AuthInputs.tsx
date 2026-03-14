@@ -145,7 +145,7 @@ export default function AuthInputs() {
           className={styles["text-button"]}
           onClick={focusEmail}
         >
-          Focus Email
+          Focus Email with useRef()
         </button>
         <button type="button" className={styles["text-button"]}>
           Create a new account

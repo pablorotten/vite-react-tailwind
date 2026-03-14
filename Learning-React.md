@@ -452,21 +452,25 @@ return (
 
 ### useState()
 
-To tell React that it has to re-render a component, we need to use the hook `useState()`. 
+To tell React that it has to re-render a Component, we need to use the hook `useState()`. 
+
+The `useState()` hook returns 2 elements: current state and setter function:
 
 ```tsx
 const [currentStateValue, updatingFunction] = useState('initialValue');
 ```
 
-A hook is a function that must be used at top level of a `component`.
+A hook is a function that must be used at top level of a `Component`.
 
-We pass the initial value to `useState(initialValue)` and it returns 2 things: 
-- `currentStateValue`: the current state value that may change next time the function is executed
+We pass the initial value to `useState(initialValue)` and it returns:
+- `currentStateValue`: current state value that may change next time the function is executed
 - `updatingFunction()`: 
   - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue` updating it
-  - It can also accept **another** function whose result will be stored in  `currentStateValue` updating it's value.
-  - The fact that `currentStateValue` is updated, will trigger React to render again the **component**
-  - If `currentStateValue` is used in the view, it will be rendered with the updated value
+  - It can also accept **another** function whose result will be stored in  `currentStateValue` updating its value.
+
+> [!IMPORTANT]
+> Using `updatingFunction()` and updating `currentStateValue` will trigger React to **render again the Component**
+> If `currentStateValue` is used in the view, it will be rendered with the updated value
 
 Initially count is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time user clicks on button, it will add 1 to count and re-render the component:
 ```tsx
@@ -514,7 +518,7 @@ export default function YourComponent() {
   // theReference will point to an Input. It's initialized with `null`
   const theReference = useRef<HTMLInputElement>(null);
 
-  // small function to focus the referenced Input. Might be null, that's why the `?`
+  // function to focus the referenced Input. Might be null (?)
   function focusReferencedInput() {
     theReference.current?.focus();
   }
@@ -527,7 +531,7 @@ export default function YourComponent() {
       ...
     />
     ...
-    // And finally, this is just a button to call the function that focuses the Input
+    // Finally, a button to call the function that triggers the Input focus
     <button type="button" className="text-button" onClick={focusReferencedInput}>
       Focus Email
     </button>
