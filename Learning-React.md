@@ -19,9 +19,12 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
   - [Styling](#styling)
     - [How apply styles to a component](#how-apply-styles-to-a-component)
       - [CSS Components (👎 not recommended)](#css-components--not-recommended)
-      - [Inline styles (👍 acceptable)](#inline-styles--acceptable)
       - [CSS Modules (👍👍 best option)](#css-modules--best-option)
-    - [Conditional styles](#conditional-styles)
+      - [Inline styles (👍 acceptable)](#inline-styles--acceptable)
+    - [](#)
+      - [CSS Components](#css-components)
+      - [CSS Modules](#css-modules)
+      - [Inline styles](#inline-styles)
       - [Conditions in styled components](#conditions-in-styled-components)
   - [Debugging react apps](#debugging-react-apps)
   - [Good practices](#good-practices)
@@ -478,31 +481,7 @@ export default function MyOtherComponent() {
 }
 ```
 
-#### Inline styles (👍 acceptable)
 
-Set style directly in a `Component.tsx` code
-
-* ✅ Styles scoped to the current component
-* ✅ Compatible with conditional styles logic
-* ❌ Adds runtime overhead because styles are created on every render
-* ❌ Generates classnames that are hard to debug
-
-**MyComponent.tsx**
-```tsx
-import { styled } from 'styled-components';
-...
-const RedLabel = styled.label`
-  color: red;
-`;
-...
-export default function MyComponent() {
-  return (
-    <RedLabel>
-      This text will be red only in this component
-    </RedLabel>
-  );
-}
-```
 #### CSS Modules (👍👍 best option)
 
 Define the styles of a Component in a file with the same name. Then import the styles as an object and use the properties of that object to apply the styles to the elements.
@@ -534,44 +513,127 @@ export default function MyComponent() {
 }
 ```
 
-### Conditional styles
+#### Inline styles (👍 acceptable)
+
+Set style directly in a `Component.tsx` code
+
+* ✅ Styles scoped to the current component
+* ✅ Compatible with conditional styles logic
+* ❌ Adds runtime overhead because styles are created on every render
+* ❌ Generates classnames that are hard to debug
+
+**MyComponent.tsx**
+```tsx
+import { styled } from 'styled-components';
+...
+const RedLabel = styled.label`
+  color: red;
+`;
+...
+export default function MyComponent() {
+  return (
+    <RedLabel>
+      This text will be red only in this component
+    </RedLabel>
+  );
+}
+```
+
+### 
 
 You can define a condition in the style based on a property. 
 Can do the same with classes, but remember to return an `undefined` class for one of the cases.
 
-```ts
-const isValid: boolean = !enteredEmail.includes('@');
+#### CSS Components
 
-// conditional inline style
-const InvalidLabel = styled.label`
-  color: ${({ isValid }) => (isValid ? 'green' : 'red')};
-`;
+Add a new style in the CSS file and apply it conditionally in the component. Remember to return `''` for one of the cases.
+
+**MyComponent.css**
+```css
+.valid {
+  color: green;
+}
+
+.invalid-mail {
+  color: red;
+}
+```
+
+**MyComponent.tsx**
+```tsx
+const isValid: boolean = !enteredEmail.includes('@');
 
 return (
   ...
-  
-  <InvalidLabel isValid={isValid} >
+  <label className={isValid ? 'valid' : 'invalid-mail'}>
     Entered mail is {isValid ? 'valid' : 'invalid'}
-  </InvalidLabel>
-
-  <input
-    type="email"
-    // conditional color
-    style={{ color: checkIfValid ? 'red' : 'green' }}
-    // conditional class
-    className={checkIfValid ? 'invalid' : undefined}
-    onChange={(event) => handleInputChange('email', event.target.value)}
-  />
+  </label>
 )
 ```
 
 To mix conditional and permanent classes:
-
-```ts
+```tsx
 <input
-  type="email"
-  className={`label ${checkIfValid ? 'invalid' : ''}`}
+  className={`permanent-class ${checkIfValid ? 'conditional-class' : ''}`}
 />
+```
+#### CSS Modules
+
+Add a new style in the CSS module and apply it conditionally in the component. Remember to return `undefined` for one of the cases.
+
+**MyComponent.module.css**
+```css
+.valid {
+  color: green;
+}
+.invalid-mail {
+  color: red;
+}
+```
+
+**MyComponent.tsx**
+```tsx
+const isValid: boolean = !enteredEmail.includes('@');
+
+return (
+  ...
+  // CSS Modules:
+  <label className={isValid ? styles.valid : styles['invalid-mail']}>
+    Entered mail is {isValid ? 'valid' : 'invalid'}
+  </label>
+)
+```
+
+To mix conditional and permanent classes:
+```tsx
+<input
+  className={`${styles['permanent-class']} ${checkIfValid ? styles['conditional-class'] : undefined}`}
+/>
+```
+
+#### Inline styles
+
+Define the styles directly in the component using a condition.
+This approach is different because there's 1 single class with a dynamic style instead of 2 different classes. So we don't need to return `undefined` for one of the cases.
+
+```tsx
+const isValid: boolean = !enteredEmail.includes('@');
+
+// Interface to accept the property $invalid 
+interface InputProps {
+  $invalid?: boolean;
+}
+
+const ValidOrInvalidLabel = styled.label<InputProps>`
+  color: ${({ $invalid }) => ($invalid ? 'red' : 'green')};
+`;
+
+return (
+  ...
+  <ValidOrInvalidLabel $invalid={!isValid}>
+    Entered mail is {isValid ? 'valid' : 'invalid'}
+  </ValidOrInvalidLabel>
+)
 ```
 
 

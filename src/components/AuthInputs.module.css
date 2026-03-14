@@ -87,10 +87,10 @@ input.invalid {
   background-color: greenyellow;
 }
 
-.css-module-controls label.invalid {
-  color: #f87171;
-}
 
 .css-module-controls.invalid-mail {
   color: #dd2c2c;
+  border: 1px solid #f73f3f;
+  padding: 0.5rem;
+  border-radius: 4px;
 }

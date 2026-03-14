@@ -57,12 +57,15 @@ const Input = styled.input<InputProps>`
     0 1px 2px 0 rgba(0, 0, 0, 0.06);
 `;
 
-const CSSInlineDiv = styled.div`
+const CSSInlineDiv = styled.div<{ $invalid?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  border: ${({ $invalid }) => ($invalid ? "1px solid #f73f3f" : "transparent")};
+  padding: 0.5rem;
+  border-radius: 4px;
 `;
 
 const CSSInlineLabel = styled.label`
@@ -73,7 +76,7 @@ const CSSInlineLabel = styled.label`
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #6b7280;
-  background-color: purple;
+  background-color: #d1fafc;
 `;
 
 export default function AuthInputs() {
@@ -152,15 +155,27 @@ export default function AuthInputs() {
         </button>
       </div>
 
-      <div className="css-component-controls">
+      <div
+        className={`css-component-controls ${emailNotValid ? "invalid-mail" : ""}`}
+      >
         <label className="css-component">Classic CSS Style 👎</label>
       </div>
-      <CSSInlineDiv>
-        <CSSInlineLabel>Inline Style 👍</CSSInlineLabel>
-      </CSSInlineDiv>
-      <div className={styles["css-module-controls"]}>
-        <label>CSS Module Styled 👍👍</label>
+      
+      <div
+        className={`${styles["css-module-controls"]} ${
+          emailNotValid ? styles["invalid-mail"] : ""
+        }`}
+      >
+        <label className={emailNotValid ? styles["invalid-mail"] : undefined}>
+          CSS Module Styled 👍👍
+        </label>
       </div>
+      
+      <CSSInlineDiv $invalid={emailNotValid}>
+        <CSSInlineLabel $invalid={emailNotValid}>
+          Inline Style 👍
+        </CSSInlineLabel>
+      </CSSInlineDiv>
     </AuthInputsContainer>
   );
 }
