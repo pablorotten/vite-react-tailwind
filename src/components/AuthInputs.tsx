@@ -172,7 +172,7 @@ export default function AuthInputs() {
       </div>
       
       <CSSInlineDiv $invalid={emailNotValid}>
-        <CSSInlineLabel $invalid={emailNotValid}>
+        <CSSInlineLabel>
           Inline Style 👍
         </CSSInlineLabel>
       </CSSInlineDiv>

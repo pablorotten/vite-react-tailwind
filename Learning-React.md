@@ -13,23 +13,23 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Events](#events)
       - [Functions with parameters](#functions-with-parameters)
   - [Styling](#styling)
-    - [How apply styles to a component](#how-apply-styles-to-a-component)
-      - [CSS Components (👎 not recommended)](#css-components--not-recommended)
-      - [CSS Modules (👍👍 best option)](#css-modules--best-option)
-      - [Inline styles (👍 acceptable)](#inline-styles--acceptable)
-      - [Conditions in styled components](#conditions-in-styled-components)
+    - [How to apply styles to a component](#how-to-apply-styles-to-a-component)
+      - [Global CSS files (👎 not recommended for large apps)](#global-css-files--not-recommended-for-large-apps)
+      - [CSS Modules (👍👍 recommended)](#css-modules--recommended)
+      - [Inline styles / styled-components (👍 acceptable)](#inline-styles--styled-components--acceptable)
+      - [Conditions in styled-components](#conditions-in-styled-components)
   - [Hooks](#hooks)
     - [useState()](#usestate)
     - [useRef()](#useref)
   - [Debugging react apps](#debugging-react-apps)
   - [Good practices](#good-practices)
-    - [Import images as and use them as variables:](#import-images-as-and-use-them-as-variables)
-    - [Each `Component` must be in a separate file](#each-component-must-be-in-a-separate-file)
+    - [Import images and use them as variables:](#import-images-and-use-them-as-variables)
+    - [Each `Component` should be in a separate file](#each-component-should-be-in-a-separate-file)
 
 
 ## React rendering workflow
 
-The **entry point** is a simple `html` that calls a first `JSX` file, `main.tsx`.
+The **entry point** is a simple `HTML` that loads an initial JSX file, `main.tsx`.
 
 From that initial `main.tsx` we keep calling other components until we can render the whole page.
 
@@ -50,13 +50,15 @@ From that initial `main.tsx` we keep calling other components until we can rende
 
 `main.tsx`
 ```tsx
-import App from './App.tsx'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <React.StrictMode>
     <App />
-  </StrictMode>,
-)
+  </React.StrictMode>,
+);
 ```
 
 `Header.tsx`
@@ -74,8 +76,9 @@ export default Header;
 ```
 
 `App.tsx`
-```jsx
-import Header from "./Header";
+```tsx
+import React, { useState } from 'react';
+import Header from './Header';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -85,7 +88,6 @@ function App() {
       <Header />
       <main>
         ...
-        </div>
       </main>
     </>
   );
@@ -113,27 +115,27 @@ function Header() {
 export default Header;
 ```
 
-Component is a **JSX** function that
+A component is a JavaScript/TypeScript function that returns JSX.
 
-- Starts in Upper case
+- Starts with an uppercase name
 - Returns renderable content
-- They're reusable
+- Is reusable and composable
 
 ### Props (properties)
 
-**Props** are parameters you can pass to **Components** constructor. By default, react puts all the **props** are inside the `props` object:
+**Props** are parameters you can pass to components. By default, React provides all props on the `props` object:
 
 ```tsx
 // MyComponent.tsx
 function MyComponent(props) {
   return (
-    <div>{props.prop1}</div>
-    <div>{props.prop2}</div>
-    <div>{props.prop3}</div>
+    <>
+      <div>{props.prop1}</div>
+      <div>{props.prop2}</div>
+      <div>{props.prop3}</div>
+    </>
   );
 }
-
-...
 
 // App.tsx
   <MyComponent
@@ -143,23 +145,24 @@ function MyComponent(props) {
   />
 ```
 
-You can be more explicit using **object destructuring**. For example, this component has the props `image`, `title` and `description`:
+You can be more explicit using **object destructuring**. For example, this component has the props `image`, `title`, and `description`:
 
 `CoreConcept.tsx`
 ```tsx
-function CoreConcept({image, title = "default title", description}) {
+function CoreConcept({ image, title = 'default title', description }: { image: string; title?: string; description?: string }) {
   return (
     <li>
-      <img src={image} alt={title}/>
+      <img src={image} alt={title} />
       <h3>{title}</h3>
       <p>{description}</p>
     </li>
   );
 }
 ```
-Pros can have default values
 
-Use it directly passing the parameters or using JS spread operator `...Array` if you have the data in Json format
+Props can have default values.
+
+Use props by passing parameters directly or by using the JS spread operator `...` when the data comes from an object (e.g., JSON):
 
 `App.tsx`
 ```tsx
@@ -175,7 +178,7 @@ Use it directly passing the parameters or using JS spread operator `...Array` if
 
 ### Component composition
 
-When using a components, anything inside the declaration `<Component> Here! <Component/>` is send to the Component constructor in the **prop** `props.children`.
+When using a component, anything between `<Component>...</Component>` is provided to the component as `props.children`.
 
 Useful to send text:
 ```tsx
@@ -191,13 +194,15 @@ export default function TabButton() {
 <TabButton>Button text</TabButton>
 ```
 
-Compatible with deconstruction
+Compatible with destructuring:
 ```tsx
 // TabButton.tsx
-export default function TabButton({children}) {
-  <button>
-    {children}
-  </button>
+export default function TabButton({ children }: { children?: React.ReactNode }) {
+  return (
+    <button>
+      {children}
+    </button>
+  );
 }
 ```
 
@@ -253,8 +258,7 @@ return (
 
 ### Events
 
-Define a function in a **Component** and use it in the return statement.
-Remember that the scope of the function `handleClick()` is restricted to `TabButton.tsx` component. 
+Define a function in a component and pass it to the element via an event handler. The function's scope is the component where it's defined.
 
 `TabButton.tsx`
 ```tsx
@@ -296,6 +300,7 @@ function handleSelect() {
   <TabButton onSelect={handleSelect}>Button Text</TabButton>
 </ul>
 ```
+
 #### Functions with parameters
 
 The anonymous function we pass to the component can have parameters:
@@ -304,36 +309,34 @@ The anonymous function we pass to the component can have parameters:
 ```tsx
 function App() {
 
-  function handleSelect(selectedButton) {
+  function handleSelect(selectedButton: string) {
     console.log(selectedButton);
   }
 
-...
-return (
-  ...
-
-  <menu>
-    <TabButton onSelect={() => handleSelect('components')}>
-      Components
-    </TabButton>
-    <TabButton onSelect={() => handleSelect('jsx')}>
-      JSX
-    </TabButton>
-  ...
-)
+  return (
+    <menu>
+      <TabButton onSelect={() => handleSelect('components')}>
+        Components
+      </TabButton>
+      <TabButton onSelect={() => handleSelect('jsx')}>
+        JSX
+      </TabButton>
+    </menu>
+  );
+}
 ```
 
 
 ## Styling
 
-### How apply styles to a component
+### How to apply styles to a component
 
-#### CSS Components (👎 not recommended)
+#### Global CSS files (👎 not recommended for large apps)
 
 Define the styles in a separate CSS file and import it in the component. 
 
 * ✅ Easy to implement
-* ❌ Styles are global and will be applied to the whole App, not just the component
+* ❌ Styles are global and will be applied to the whole app, not just the component
 
 **MyComponent.css**
 ```css
@@ -344,8 +347,8 @@ Define the styles in a separate CSS file and import it in the component.
 
 **MyComponent.tsx**
 ```tsx
-import "./MyComponent.css";
-...
+import './MyComponent.css';
+
 export default function MyComponent() {
   return (
     <label className="red-label">
@@ -355,8 +358,8 @@ export default function MyComponent() {
 }
 ```
 
-> [!WARNING]  
-> Remember that styles defined in a CSS component **will be applied to the whole App!!**
+> [!WARNING]
+> Remember that styles defined in a global CSS file will be applied to the whole app unless scoped (e.g., CSS Modules).
  
 **MyOtherComponent.tsx**
 ```tsx
@@ -370,16 +373,16 @@ export default function MyOtherComponent() {
 ```
 
 
-#### CSS Modules (👍👍 best option)
+#### CSS Modules (👍👍 recommended)
 
-Define the styles of a Component in a file with the same name. Then import the styles as an object and use the properties of that object to apply the styles to the elements.
+Define the styles of a component in a file with the same name. Then import the styles as an object and use the properties of that object to apply the styles to the elements.
 
 * ✅ Styles are scoped to the current component
 * ✅ Styles are reusable and easy to maintain
 * ✅ No runtime overhead because styles are generated at build time
 
 > [!INFO]
-> If your class has special characters like `-` you need to use square brackets to access it: `styles['my-class']` instead of `styles.my-class`
+> If your class has special characters like `-` you need to use square brackets to access it: `styles['my-class']` instead of `styles.my-class`. Prefer camelCase class names to use `styles.someClass`.
 
 **MyComponent.module.css**
 ```css
@@ -390,8 +393,8 @@ Define the styles of a Component in a file with the same name. Then import the s
 
 **MyComponent.tsx**
 ```tsx
-import styles from "./MyComponent.module.css";
-...
+import styles from './MyComponent.module.css';
+
 export default function MyComponent() {
   return (
     <label className={styles['red-label']}>
@@ -401,23 +404,23 @@ export default function MyComponent() {
 }
 ```
 
-#### Inline styles (👍 acceptable)
+#### Inline styles / styled-components (👍 acceptable)
 
-Set style directly in a `Component.tsx` code
+Set style directly in a component or use a CSS-in-JS library such as styled-components.
 
 * ✅ Styles scoped to the current component
 * ✅ Compatible with conditional styles logic
-* ❌ Adds runtime overhead because styles are created on every render
-* ❌ Generates classnames that are hard to debug
+* ❌ Adds runtime overhead in some libraries because styles are created at runtime
+* ❌ Some approaches generate classnames that are harder to debug
 
 **MyComponent.tsx**
 ```tsx
-import { styled } from 'styled-components';
-...
+import styled from 'styled-components';
+
 const RedLabel = styled.label`
   color: red;
 `;
-...
+
 export default function MyComponent() {
   return (
     <RedLabel>
@@ -427,161 +430,166 @@ export default function MyComponent() {
 }
 ```
 
-#### Conditions in styled components
+#### Conditions in styled-components
 
-All the properties defined inside a Styled component are accesible from the component itself. This can be used to define conditions. Those properties needs a `$` before the name
+Styled-components (and similar libraries) let you access props inside the styled definition to conditionally set styles. When passing non-DOM props to styled-components, it's a common convention to prefix transient props with `$` to avoid them being forwarded to the underlying DOM element.
 
-For example here:
-1. Input is used with the property `$invalid`
-2. `$invalid` value depends on the function `passwordNotValid`
-3. We use `$invalid` value as condition for the color
+Example:
 
-```ts
-const Input = styled.input`
+```tsx
+import styled from 'styled-components';
+
+const Input = styled.input<{ $invalid?: boolean }>`
   color: ${({ $invalid }) => ($invalid ? '#ef4444' : '#374151')};
 `;
+
 const passwordNotValid = submitted && enteredPassword.trim().length < 6;
 
 return (
-  ...
-  <Input $invalid={passwordNotValid}/>
-
+  <Input $invalid={passwordNotValid} />
+);
 ```
 
 ## Hooks
 
 ### useState()
 
-To tell React that it has to re-render a Component, we need to use the hook `useState()`. 
+To tell React that it has to re-render a component, we use the `useState()` hook.
 
-The `useState()` hook returns 2 elements: current state and setter function:
+The `useState()` hook returns two items: the current state and a setter function:
 
 ```tsx
 const [currentStateValue, updatingFunction] = useState('initialValue');
 ```
 
-A hook is a function that must be used at top level of a `Component`.
+A hook is a function that must be used at the top level of a component (no conditional or nested calls).
 
 We pass the initial value to `useState(initialValue)` and it returns:
-- `currentStateValue`: current state value that may change next time the function is executed
+- `currentStateValue`: current state value that may change the next time the function is executed
 - `updatingFunction()`: 
-  - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue` updating it
-  - It can also accept **another** function whose result will be stored in  `currentStateValue` updating its value.
+  - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue`, updating it
+  - It can also accept another function whose result will be stored in `currentStateValue`.
 
 > [!IMPORTANT]
-> Using `updatingFunction()` and updating `currentStateValue` will trigger React to **render again the Component**
-> If `currentStateValue` is used in the view, it will be rendered with the updated value
+> Using `updatingFunction()` and updating `currentStateValue` will trigger React to re-render the component if the state value changed.
 
-Initially count is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time user clicks on button, it will add 1 to count and re-render the component:
+Initially `count` is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time the user clicks on the button, it will add 1 to `count` and re-render the component:
 ```tsx
-import { useState } from "react";
+import { useState } from 'react';
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    ...
     <button onClick={() => setCount((count) => count + 1)}>
       count is {count}
     </button>
-    ...
-  )
+  );
+}
 ```
 
-We can also use setCount inside a function and just pass the new value to it:
+We can also use `setCount` inside a function and just pass the new value to it:
 
 ```tsx
 function App() {
   const [selectedTopic, setSelectedTopic] = useState();
 
-  function handleSelect(selectedButton) {
+  function handleSelect(selectedButton: string) {
     setSelectedTopic(selectedButton);
   }
 
-  ...
   return (
-    ...
     <TabButton onSelect={() => handleSelect('components')}>
       Components
     </TabButton>
+  );
+}
 ```
 
 ### useRef()
 
-The hook `useRef()` allows us to get a reference to an element in the DOM and manipulate it directly.
+The `useRef()` hook allows us to keep a mutable reference (for example, to a DOM element) that survives re-renders.
 
 ```tsx
-import { useRef } from "react";
-...
+import React, { useRef } from 'react';
 
 export default function YourComponent() {
-  // theReference will point to an Input. It's initialized with `null`
-  const theReference = useRef<HTMLInputElement>(null);
+  // theReference will point to an input element and is initialized with `null`.
+  const theReference = useRef<HTMLInputElement | null>(null);
 
-  // function to focus the referenced Input. Might be null (?)
   function focusReferencedInput() {
     theReference.current?.focus();
   }
 
   // ✅ Here is when we connect the pointer `theReference` to the Input element. 
   return (
-    ...
-    <Input
-      ref={theReference}
-      ...
-    />
-    ...
-    // Finally, a button to call the function that triggers the Input focus
-    <button type="button" className="text-button" onClick={focusReferencedInput}>
-      Focus Email
-    </button>
+    <>
+      <input ref={theReference} />
+      <button type="button" onClick={focusReferencedInput}>
+        Focus Email
+      </button>
+    </>
+  );
+}
 ```
 
 
-
 ## Debugging react apps
-- Find the sources in chrome dev tools and put breakpoint
-- StrictMode every component is executed twice
-- ReactDevTools: Install the extension
+- Find the sources in Chrome DevTools and put breakpoints where needed.
+- In StrictMode (development), React intentionally mounts and unmounts components twice to help surface side-effects.
+- React DevTools: Install the browser extension for inspecting component trees and hooks.
 
 ## Good practices
 
-### Import images as and use them as variables:
+### Import images and use them as variables:
 ```tsx
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
 
 ...
 <img src={viteLogo} className="logo" alt="Vite logo" />
 ```
 
-### Each `Component` must be in a separate file
+### Each `Component` should be in a separate file
 
-- File has same name as **Component**
-- **Components** are under `src/components` folder. You can add as many subfolder as you want but remember to adapt the paths
-- Export the component to make them accessible for other components 
+- File has same name as the component
+- Components live under `src/components`. You can add subfolders as needed, adjusting import paths.
+- Export the component to make it accessible to other files.
 ```tsx
 // In src/components/YourComponent.tsx
-import reactLogo from "../assets/react.svg"; // adapt url to ../assets
+import reactLogo from '../assets/react.svg'; // adapt url to ../assets
 
-export default function YourComponent() { ... }
-...
+export default function YourComponent() { return <div /> }
 // In App.tsx
-import Header from "./components/YourComponent.tsx";
+import Header from './components/YourComponent.tsx';
 ```
-- Style files (CSS) related to a component are next to it using the same name
-  - ❗Styles defined in a CSS component **will be applied to the whole App!!**
+- Style files (CSS) related to a component are typically colocated next to it using the same base name.
+  - ❗Styles defined in a global CSS file will affect the whole app unless you scope them with CSS Modules.
 
 ![alt text](image.png)
 
 Import and use it:
 ```tsx
-import "./Header.css"
+import './Header.css'
 
-export default function Header() { ... }
+export default function Header() { return <header /> }
 ```
 
-- Functions received as props in component must start with `on`
+- Functions received as props that are event handlers should start with `on` (e.g., `onClick`, `onSelect`).
+
 ```tsx
-export default function TabButton({children, onSelect, onClick, ...}) {
+export default function TabButton({ children, onSelect }: { children?: React.ReactNode; onSelect?: () => void }) {
+  return (
+    <li>
+      <button onClick={onSelect}>{children}</button>
+    </li>
+  );
+}
 ```
+
+Note: when rendering lists, always provide a unique `key` prop for each item to help React optimize rendering.
+
+Useful links:
+
+- React Hooks: https://reactjs.org/docs/hooks-intro.html
+- React Fragments: https://reactjs.org/docs/fragments.html
