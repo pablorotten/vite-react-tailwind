@@ -4,12 +4,11 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
 
 
 - [Learning-React](#learning-react)
-  - [1. React rendering workflow](#1-react-rendering-workflow)
+  - [React rendering workflow](#react-rendering-workflow)
     - [The complete workflow:](#the-complete-workflow)
-  - [2. Concepts](#2-concepts)
-    - [Component](#component)
+  - [Component](#component)
     - [Props (properties)](#props-properties)
-      - [Component composition](#component-composition)
+    - [Component composition](#component-composition)
     - [Fragment](#fragment)
   - [3. Events](#3-events)
   - [4. Update the UI](#4-update-the-ui)
@@ -32,7 +31,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Each `Component` must be in a separate file](#each-component-must-be-in-a-separate-file)
 
 
-## 1. React rendering workflow
+## React rendering workflow
 
 The **entry point** is a simple `html` that calls a first `JSX` file, `main.tsx`.
 
@@ -102,40 +101,7 @@ export default App;
 ### The complete workflow:
 ![alt text](images/react-workflow.png)
 
-## 2. Concepts
-
-> [!WARNING]  
-> TODO: Format this section
-
-Component-based architecture:
-Everything is a component—small, reusable pieces that build your UI.
-
-Declarative rendering:
-You describe what the UI should look like for a given state, not how to update it step by step.
-
-State and props:
-
-State: Data managed inside a component (changes trigger re-render).
-Props: Data passed from parent to child (read-only for the child).
-Hooks:
-
-useState: For stateful values.
-useEffect: For side effects (fetching, subscriptions, etc.).
-useRef: For DOM access or persistent values.
-Event handling:
-Functions are passed to elements/components as props, and called on events (like clicks).
-
-Controlled vs uncontrolled components:
-Controlled: React manages the value (e.g., input with value prop).
-Uncontrolled: DOM manages the value (e.g., input with ref).
-
-Component composition:
-Components can contain other components, and you can pass children or functions as props.
-
-Styling:
-You can use CSS, CSS modules, or styled-components—React doesn’t enforce a style method.
-
-### Component
+## Component
 
 `Header.tsx`
 ```tsx
@@ -211,7 +177,7 @@ Use it directly passing the parameters or using JS spread operator `...Array` if
 </ul>
 ```
 
-#### Component composition
+### Component composition
 
 When using a components, anything inside the declaration `<Component> Here! <Component/>` is send to the Component constructor in the **prop** `props.children`.
 
@@ -241,8 +207,7 @@ export default function TabButton({children}) {
 
 ### Fragment
 
-A TSX value must have only one root element. For example, the following code would be invalid and cause an error:
-
+In a `Component`, you can't return 2 sibling elements:
 ```tsx
 return (
   <h2>Welcome!</h2>
@@ -250,7 +215,19 @@ return (
 );
 ```
 
-With "React Fragment" you can solve this without adding extra elements on the page like `div`
+You could solve this by wrapping the elements in a `div`
+```tsx
+return (
+  <div>
+    <h2>Welcome!</h2>
+    <p>React is awesome!</p>
+  </div>
+);
+```
+
+But maybe you don't want to add that extra element to the page 🙁
+
+With "React Fragment" you can solve this!
 
 ```tsx
 import { Fragment } from 'react';
