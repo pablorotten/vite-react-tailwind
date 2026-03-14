@@ -4,10 +4,14 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
 
 
 - [Learning-React](#learning-react)
-  - [React rendering workflow](#react-rendering-workflow)
-    - [The complete workflow:](#the-complete-workflow)
+  - [React \& TypeScript Basics](#react--typescript-basics)
+    - [React rendering workflow](#react-rendering-workflow)
+      - [The complete workflow:](#the-complete-workflow)
+    - [State](#state)
+    - [Type](#type)
   - [Component](#component)
     - [Props (properties)](#props-properties)
+      - [Object destructuring](#object-destructuring)
     - [Component composition](#component-composition)
     - [Fragment](#fragment)
     - [Events](#events)
@@ -19,15 +23,20 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
       - [Inline styles / styled-components (👍 acceptable)](#inline-styles--styled-components--acceptable)
       - [Conditions in styled-components](#conditions-in-styled-components)
   - [Hooks](#hooks)
+    - [Custom Hooks](#custom-hooks)
     - [useState()](#usestate)
     - [useRef()](#useref)
+    - [useEffect()](#useeffect)
+    - [useQuery()](#usequery)
   - [Debugging react apps](#debugging-react-apps)
   - [Good practices](#good-practices)
     - [Import images and use them as variables:](#import-images-and-use-them-as-variables)
     - [Each `Component` should be in a separate file](#each-component-should-be-in-a-separate-file)
 
 
-## React rendering workflow
+## React & TypeScript Basics
+
+### React rendering workflow
 
 The **entry point** is a simple `HTML` that loads an initial JSX file, `main.tsx`.
 
@@ -96,8 +105,24 @@ function App() {
 export default App;
 ```
 
-### The complete workflow:
+#### The complete workflow:
 ![alt text](images/react-workflow.png)
+
+### State
+
+State is the memory of a specific component. It's data that can change over time and affects what is rendered on the screen. 
+When state changes, React re-renders the component to reflect the new state.
+
+### Type
+
+Defines the shape of data. For example, a `User` type with `name` and `age` properties:
+
+```tsx
+type User = {
+  name: string;
+  age: number;
+};
+```
 
 ## Component
 
@@ -144,6 +169,8 @@ function MyComponent(props) {
     prop3="property 3"
   />
 ```
+
+#### Object destructuring
 
 You can be more explicit using **object destructuring**. For example, this component has the props `image`, `title`, and `description`:
 
@@ -452,28 +479,56 @@ return (
 
 ## Hooks
 
-### useState()
+Hooks are special functions that allow you to use (update) `state` in a `component`.
+They must be used at the top level of a component (no conditional or nested calls).
 
-To tell React that it has to re-render a component, we use the `useState()` hook.
+### Custom Hooks
 
-The `useState()` hook returns two items: the current state and a setter function:
+You can define a hook in a separate file and reuse it across components. 
+Just import the hook in your component and it will update its
 
+1. Define the hook `useCounter()` in `src/hooks/useCounter.tsx`:
 ```tsx
-const [currentStateValue, updatingFunction] = useState('initialValue');
+import { useState } from 'react';
+
+export function useCounter(initialValue = 0) {
+  const [count, setCount] = useState(initialValue);
+
+  const increment = () => setCount(prev => prev + 1);
+  const decrement = () => setCount(prev => prev - 1);
+
+  // We return the data and the functions so components can use them
+  return { count, increment, decrement };
+}
 ```
 
-A hook is a function that must be used at the top level of a component (no conditional or nested calls).
+2. Use the hook in a component. 
+When the component calls `useCounter()`, it returns methods and a variable that are managed by `useState()`.
+```tsx
+import { useCounter } from '../hooks/useCounter';
 
-We pass the initial value to `useState(initialValue)` and it returns:
-- `currentStateValue`: current state value that may change the next time the function is executed
-- `updatingFunction()`: 
-  - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue`, updating it
-  - It can also accept another function whose result will be stored in `currentStateValue`.
+function MyButton() {
+  // We "plug in" the hook here!
+  const { count, increment } = useCounter(10); 
+
+  return <button onClick={increment}>Count is {count}</button>;
+}
+```
+
+### useState()
+
+Returns a value and a setter function to update the value. Attacht it to a component to make it reactive. When the value changes, the component re-renders to reflect the new state.
 
 > [!IMPORTANT]
-> Using `updatingFunction()` and updating `currentStateValue` will trigger React to re-render the component if the state value changed.
+> Re-render the component means that the constructor function `export default function MyComponent() { ... }` is called again and the JSX is re-evaluated to update the DOM.
 
-Initially `count` is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time the user clicks on the button, it will add 1 to `count` and re-render the component:
+In this example:
+* Initially `count` is `0`
+* We pass a function to `setCount()` that takes `count` as parameter and adds one to it.
+* We attatch `setCount()` to a button to use it
+* Every time the user clicks on the button, it will add 1 to `count` 
+* This will re-render the component executing the functon `App()` again to update the DOM with the new value of `count`
+
 ```tsx
 import { useState } from 'react';
 
@@ -491,25 +546,31 @@ function App() {
 We can also use `setCount` inside a function and just pass the new value to it:
 
 ```tsx
-function App() {
-  const [selectedTopic, setSelectedTopic] = useState();
+import { useState } from 'react';
 
-  function handleSelect(selectedButton: string) {
-    setSelectedTopic(selectedButton);
+function App() {
+  const [count, setCount] = useState(0);
+
+  function handleIncrement() {
+    // compute the new value and pass it to setCount
+    setCount(count + 1);
   }
 
   return (
-    <TabButton onSelect={() => handleSelect('components')}>
-      Components
-    </TabButton>
+    <button onClick={handleIncrement}>
+      count is {count}
+    </button>
   );
 }
 ```
 
+> [!WARNING]
+> An `useState()` function declared in a component will always trigger a re-render even if is not explicity use in the Component DOM (the `return (...)` statement). 
+> **This could be the source of some performance issues.**
+
 ### useRef()
 
-The `useRef()` hook allows us to keep a mutable reference (for example, to a DOM element) that survives re-renders.
-
+It's a pointer. Keeps a reference (for example, to a DOM element) that doesn't trigger a re-render when it changes.
 ```tsx
 import React, { useRef } from 'react';
 
@@ -530,6 +591,125 @@ export default function YourComponent() {
       </button>
     </>
   );
+}
+```
+
+### useEffect()
+
+Is the "Action" or "Side Effect". Something that happens outside of React's world 🛸 like fetching data from an API, manually changing the browser's title, listening for window resizing, etc.
+
+
+```tsx
+useEffect(() => { 
+  ... 
+  return () => { ... }
+}, [])
+```
+
+1.  **Effect function** `() => { ... }`: The logic you want to run after the component renders. This can include side effects like fetching data, setting up event listeners, or updating the DOM.
+2.  **Cleanup function** `return () => { ... }`: Optional. If you return a function from the effect, React will call it before the component unmounts or before running the effect again on subsequent renders. This is useful for cleaning up resources like event listeners or timers and prevent race conditions on HTTP request aborting them before launching a new one.
+3.  **Dependency array** `[]`: If empty, the effect runs only once after the initial render. If it contains variables, the effect runs after every render where those variables change.
+
+```tsx
+import React, { useState, useEffect } from 'react';
+
+function ScreenSizeMonitor() {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    // 1. Effect function
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    console.log("Effect: Event listener added!");
+
+    // 2. Cleanup function
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      console.log("Cleanup: Event listener removed!");
+    };
+  }, []); // 3. Dependency array (empty means this effect runs only once)
+
+  return (
+    <div style={{ padding: '20px', border: '1px solid #ccc' }}>
+      <h2>Screen Monitor</h2>
+      <p>Your current window width is: <strong>{windowWidth}px</strong></p>
+      {windowWidth < 600 ? <p>📱 You are on a mobile view</p> : <p>💻 You are on a desktop view</p>}
+    </div>
+  );`
+}
+```
+
+> [!CAUTION]
+> Would this code work without `useEffect()`? Yes. 
+> **But it would add a new event listener every time the component re-renders** causing performance issues and memory leaks.
+
+### useQuery()
+
+This is a custom hook provided by TanStack Query (a popular library for data fetching and caching in React). It abstracts away the logic for fetching data and managing loading and error states.
+
+To make a HTTP request in a React component you need:
+1. The UI: This is the component where for example user inputs the data and clicks to start the request. It's also where you want to show the loading state and the response data.
+2. The Hook: The bridge between the Component and the API. Manages the cache keys, the loading states, and the retries.
+3. The API: The function that makes the actual HTTP request and returns the data. This is native web API, nothing React-specific.
+
+**1. MyComponent.tsx**
+```tsx
+import { useMyRequest } from '../hooks/useMyRequest';
+import type { ResponeData } from '../api/myApi';
+
+export default function MyComponent() {
+  const [query, setQuery] = useState<string | null>(null);
+  const { data, isLoading, error } = useMyRequest(query); // 2. Use the hook in the component
+  
+  // 1. Prepare the query to send it to the hook
+  function handleSearch() {
+    setQuery(userQuery.trim() || null));
+  }
+    
+  return (
+    <div>
+      <input type="text" value={userQuery} onChange={(e) => setUserQuery(e.target.value)} />
+      <button onClick={handleSearch}>Search</button>
+
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+    </div>
+  );
+}
+```
+
+**2. useMyRequest.ts**
+```tsx
+import { useQuery } from '@tanstack/react-query';
+import { fetchMyData } from '../api/myApi';
+
+export function useMyRequest(query: string | null) {
+  return useQuery<ResponeData, Error>({
+    queryKey: ['myData', query], // Unique key for caching
+    queryFn: () => fetchMyData(query!), // Function that makes the API request
+    enabled: !!query, // Only run the query if there is a valid query string
+    retry: 2, // Retry failed requests up to 2 times
+  });
+}
+```
+
+**3. myApi.ts**
+```tsx
+export type ResponeData = {
+  id: number;
+  name: string;
+  // other fields...
+};
+
+export async function fetchMyData(query: string): Promise<ResponeData> {
+  const response = await fetch(`https://api.example.com/data?search=${encodeURIComponent(query)}`);
+  if (!response.ok) throw new Error('Network response was not ok');
+  return response.json();
 }
 ```
 

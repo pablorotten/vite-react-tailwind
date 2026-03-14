@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import AuthInputs from "./components/AuthInputs";
+import Nationalize from "./components/Nationalize";
+import ScreenSizeMonitor from "./components/ScreenSizeMonitor";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -35,6 +37,12 @@ function App() {
 
         <div className="card">
           <AuthInputs />
+        </div>
+        <div className="card">
+          <Nationalize />
+        </div>
+        <div className="card">
+          <ScreenSizeMonitor />
         </div>
         <div className="card">
           <h2>Tailwind test:</h2>
