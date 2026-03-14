@@ -10,21 +10,17 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Props (properties)](#props-properties)
     - [Component composition](#component-composition)
     - [Fragment](#fragment)
-  - [3. Events](#3-events)
-  - [4. Update the UI](#4-update-the-ui)
-    - [States](#states)
-    - [Functions with parameters](#functions-with-parameters)
-    - [useRef()](#useref)
+    - [Events](#events)
+      - [Functions with parameters](#functions-with-parameters)
   - [Styling](#styling)
     - [How apply styles to a component](#how-apply-styles-to-a-component)
       - [CSS Components (👎 not recommended)](#css-components--not-recommended)
       - [CSS Modules (👍👍 best option)](#css-modules--best-option)
       - [Inline styles (👍 acceptable)](#inline-styles--acceptable)
-    - [](#)
-      - [CSS Components](#css-components)
-      - [CSS Modules](#css-modules)
-      - [Inline styles](#inline-styles)
       - [Conditions in styled components](#conditions-in-styled-components)
+  - [Hooks](#hooks)
+    - [useState()](#usestate)
+    - [useRef()](#useref)
   - [Debugging react apps](#debugging-react-apps)
   - [Good practices](#good-practices)
     - [Import images as and use them as variables:](#import-images-as-and-use-them-as-variables)
@@ -255,10 +251,10 @@ return (
 );
 ```
 
-## 3. Events
+### Events
 
-Define a function in a **component** and use it in the return statement.
-Remember that the scope of the function `handleClick()` is restricted to `TabButton.tsx`. 
+Define a function in a **Component** and use it in the return statement.
+Remember that the scope of the function `handleClick()` is restricted to `TabButton.tsx` component. 
 
 `TabButton.tsx`
 ```tsx
@@ -300,62 +296,7 @@ function handleSelect() {
   <TabButton onSelect={handleSelect}>Button Text</TabButton>
 </ul>
 ```
-
-## 4. Update the UI
-
-### States
-
-To tell React that it has to re-render a component, we need to use the hook `useState()`. 
-
-```tsx
-const [currentStateValue, updatingFunction] = useState('initialValue');
-```
-
-A hook is a function that must be used at top level of a `component`.
-
-We pass the initial value to `useState(initialValue)` and it returns 2 things: 
-- `currentStateValue`: the current state value that may change next time the function is executed
-- `updatingFunction()`: 
-  - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue` updating it
-  - It can also accept **another** function whose result will be stored in  `currentStateValue` updating it's value.
-  - The fact that `currentStateValue` is updated, will trigger React to render again the **component**
-  - If `currentStateValue` is used in the view, it will be rendered with the updated value
-
-Initially count is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time user clicks on button, it will add 1 to count and re-render the component:
-```tsx
-import { useState } from "react";
-
-function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    ...
-    <button onClick={() => setCount((count) => count + 1)}>
-      count is {count}
-    </button>
-    ...
-  )
-```
-
-We can also use setCount inside a function and just pass the new value to it:
-
-```tsx
-function App() {
-  const [selectedTopic, setSelectedTopic] = useState();
-
-  function handleSelect(selectedButton) {
-    setSelectedTopic(selectedButton);
-  }
-
-  ...
-  return (
-    ...
-    <TabButton onSelect={() => handleSelect('components')}>
-      Components
-    </TabButton>
-```
-
-### Functions with parameters
+#### Functions with parameters
 
 The anonymous function we pass to the component can have parameters:
 
@@ -382,36 +323,6 @@ return (
 )
 ```
 
-### useRef()
-
-The hook `useRef()` allows us to get a reference to an element in the DOM and manipulate it directly.
-
-```tsx
-import { useRef } from "react";
-...
-
-export default function YourComponent() {
-  // theReference will point to an Input. It's initialized with `null`
-  const theReference = useRef<HTMLInputElement>(null);
-
-  // small function to focus the referenced Input. Might be null, that's why the `?`
-  function focusReferencedInput() {
-    theReference.current?.focus();
-  }
-
-  // ✅ Here is when we connect the pointer `theReference` to the Input element. 
-  return (
-    ...
-    <Input
-      ref={theReference}
-      ...
-    />
-    ...
-    // And finally, this is just a button to call the function that focuses the Input
-    <button type="button" className="text-button" onClick={focusReferencedInput}>
-      Focus Email
-    </button>
-```
 
 ## Styling
 
@@ -516,104 +427,6 @@ export default function MyComponent() {
 }
 ```
 
-### 
-
-You can define a condition in the style based on a property. 
-Can do the same with classes, but remember to return an `undefined` class for one of the cases.
-
-#### CSS Components
-
-Add a new style in the CSS file and apply it conditionally in the component. Remember to return `''` for one of the cases.
-
-**MyComponent.css**
-```css
-.valid {
-  color: green;
-}
-
-.invalid-mail {
-  color: red;
-}
-```
-
-**MyComponent.tsx**
-```tsx
-const isValid: boolean = !enteredEmail.includes('@');
-
-return (
-  ...
-  <label className={isValid ? 'valid' : 'invalid-mail'}>
-    Entered mail is {isValid ? 'valid' : 'invalid'}
-  </label>
-)
-```
-
-To mix conditional and permanent classes:
-```tsx
-<input
-  className={`permanent-class ${checkIfValid ? 'conditional-class' : ''}`}
-/>
-```
-#### CSS Modules
-
-Add a new style in the CSS module and apply it conditionally in the component. Remember to return `undefined` for one of the cases.
-
-**MyComponent.module.css**
-```css
-.valid {
-  color: green;
-}
-.invalid-mail {
-  color: red;
-}
-```
-
-**MyComponent.tsx**
-```tsx
-const isValid: boolean = !enteredEmail.includes('@');
-
-return (
-  ...
-  // CSS Modules:
-  <label className={isValid ? styles.valid : styles['invalid-mail']}>
-    Entered mail is {isValid ? 'valid' : 'invalid'}
-  </label>
-)
-```
-
-To mix conditional and permanent classes:
-```tsx
-<input
-  className={`${styles['permanent-class']} ${checkIfValid ? styles['conditional-class'] : undefined}`}
-/>
-```
-
-#### Inline styles
-
-Define the styles directly in the component using a condition.
-This approach is different because there's 1 single class with a dynamic style instead of 2 different classes. So we don't need to return `undefined` for one of the cases.
-
-```tsx
-const isValid: boolean = !enteredEmail.includes('@');
-
-// Interface to accept the property $invalid 
-interface InputProps {
-  $invalid?: boolean;
-}
-
-const ValidOrInvalidLabel = styled.label<InputProps>`
-  color: ${({ $invalid }) => ($invalid ? 'red' : 'green')};
-`;
-
-return (
-  ...
-  <ValidOrInvalidLabel $invalid={!isValid}>
-    Entered mail is {isValid ? 'valid' : 'invalid'}
-  </ValidOrInvalidLabel>
-)
-```
-
-
 #### Conditions in styled components
 
 All the properties defined inside a Styled component are accesible from the component itself. This can be used to define conditions. Those properties needs a `$` before the name
@@ -634,6 +447,93 @@ return (
   <Input $invalid={passwordNotValid}/>
 
 ```
+
+## Hooks
+
+### useState()
+
+To tell React that it has to re-render a component, we need to use the hook `useState()`. 
+
+```tsx
+const [currentStateValue, updatingFunction] = useState('initialValue');
+```
+
+A hook is a function that must be used at top level of a `component`.
+
+We pass the initial value to `useState(initialValue)` and it returns 2 things: 
+- `currentStateValue`: the current state value that may change next time the function is executed
+- `updatingFunction()`: 
+  - The function `updatingFunction()` accepts a value that will be assigned to `currentStateValue` updating it
+  - It can also accept **another** function whose result will be stored in  `currentStateValue` updating it's value.
+  - The fact that `currentStateValue` is updated, will trigger React to render again the **component**
+  - If `currentStateValue` is used in the view, it will be rendered with the updated value
+
+Initially count is `0`. We pass a function to `setCount()` that takes `count` as parameter and adds one to it. Every time user clicks on button, it will add 1 to count and re-render the component:
+```tsx
+import { useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    ...
+    <button onClick={() => setCount((count) => count + 1)}>
+      count is {count}
+    </button>
+    ...
+  )
+```
+
+We can also use setCount inside a function and just pass the new value to it:
+
+```tsx
+function App() {
+  const [selectedTopic, setSelectedTopic] = useState();
+
+  function handleSelect(selectedButton) {
+    setSelectedTopic(selectedButton);
+  }
+
+  ...
+  return (
+    ...
+    <TabButton onSelect={() => handleSelect('components')}>
+      Components
+    </TabButton>
+```
+
+### useRef()
+
+The hook `useRef()` allows us to get a reference to an element in the DOM and manipulate it directly.
+
+```tsx
+import { useRef } from "react";
+...
+
+export default function YourComponent() {
+  // theReference will point to an Input. It's initialized with `null`
+  const theReference = useRef<HTMLInputElement>(null);
+
+  // small function to focus the referenced Input. Might be null, that's why the `?`
+  function focusReferencedInput() {
+    theReference.current?.focus();
+  }
+
+  // ✅ Here is when we connect the pointer `theReference` to the Input element. 
+  return (
+    ...
+    <Input
+      ref={theReference}
+      ...
+    />
+    ...
+    // And finally, this is just a button to call the function that focuses the Input
+    <button type="button" className="text-button" onClick={focusReferencedInput}>
+      Focus Email
+    </button>
+```
+
+
 
 ## Debugging react apps
 - Find the sources in chrome dev tools and put breakpoint
