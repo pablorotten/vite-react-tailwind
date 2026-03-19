@@ -5,9 +5,12 @@ export default function Navigation() {
   return (
     <nav className="app-nav" style={{ padding: 12 }}>
       <Link to="/" style={{ marginRight: 12 }}>
-        Home
+        🛖 Home
       </Link>
-      <Link to="/about">About</Link>
+      <Link to="/about">❓ About</Link>
+      <Link to="/user/dummy%40mail.com/dummy" style={{ marginLeft: 12 }}>
+        👤 User
+      </Link>
     </nav>
   );
 }

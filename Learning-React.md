@@ -796,11 +796,47 @@ This is how a `Route` looks like:
   * A `Route` outside of `Routes` will be rendered on every page. This is useful for components like `Navigation` that should be visible on all pages.
 * `path`: the URL that triggers this route (e.g., `/search`).
 * `element`: the component that will be rendered when the URL matches the path. You can also pass props to this component if needed. 
+* `Link`: Updates the URL and relies on `Routes` to render the correct component without a full page refresh.  
+* `useNavigate`: A hook that gives you a function to programmatically navigate to a different URL (e.g., after a form submission). 
+* `useParams`: A hook that allows you to read dynamic URL parameters (e.g., `/user/:id`).If the URL is `/user/123`, `useParams()` will return `{ id: '123' }`.
+
+**App.tsx**
 ```tsx
 <Routes>
   <Route path="/" element={<Home />} />
   <Route path="/search" element={<Search />} />
   <Route path="/routeurl" element={<MyComponent someProp={someValue} />} />
+  <Route path="/routewithparams/:id/:name" element={<ComponentWithParams />} />
 </Routes>
 <Route path="/search" element={<PersistentComponent/>} />
+```
+**MyComponent.tsx**
+```tsx
+import { Link } from 'react-router-dom';
+export default function MyComponent({ someProp }) {
+  return (
+    <div>
+      <h1>My Component</h1>
+      <p>Prop value: {someProp}</p>
+      <Link to="/">Go back to Home</Link>
+      <Link to="/search">Go to Search</Link>
+    </div>
+  );
+}
+```
+
+**ComponentWithParams.tsx**
+```tsx
+import { useParams } from 'react-router-dom';
+export default function ComponentWithParams() {
+  const { id, name } = useParams();
+
+  return (
+    <div>
+      <h1>Component with Params</h1>
+      <p>ID: {id}</p>
+      <p>Name: {name}</p>
+    </div>
+  );
+}
 ```

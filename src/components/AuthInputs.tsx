@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import { styled } from "styled-components";
 import "./AuthInputs.css";
 import styles from "./AuthInputs.module.css";
@@ -81,28 +82,39 @@ const CSSInlineLabel = styled.label`
 
 export default function AuthInputs() {
   const [enteredEmail, setEnteredEmail] = useState("");
-  const [enteredPassword, setEnteredPassword] = useState("");
+  const [enteredName, setEnteredName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   function focusEmail() {
     emailInputRef.current?.focus();
   }
 
-  function handleInputChange(identifier: "email" | "password", value: string) {
+  function handleInputChange(identifier: "email" | "name", value: string) {
     if (identifier === "email") {
       setEnteredEmail(value);
     } else {
-      setEnteredPassword(value);
+      setEnteredName(value);
     }
   }
 
   function handleLogin() {
     setSubmitted(true);
+
+    const emailValid = enteredEmail.includes("@");
+    const nameValid = enteredName.trim().length > 0;
+
+    if (emailValid && nameValid) {
+      // navigate to the user page, encode values for safe URLs
+      const e = encodeURIComponent(enteredEmail);
+      const n = encodeURIComponent(enteredName);
+      navigate(`/user/${e}/${n}`);
+    }
   }
 
   const emailNotValid: boolean = submitted && !enteredEmail.includes("@");
-  const passwordNotValid = submitted && enteredPassword.trim().length < 6;
+  const nameNotValid = submitted && enteredName.trim().length === 0;
 
   return (
     <AuthInputsContainer>
@@ -122,22 +134,20 @@ export default function AuthInputs() {
             onChange={(event) => handleInputChange("email", event.target.value)}
           />
         </p>
-        <p>
-          <MyLabel
-            $invalid={passwordNotValid}
-            className={passwordNotValid ? styles.invalid : undefined}
-          >
-            Password
-          </MyLabel>
-          <Input
-            $invalid={passwordNotValid}
-            type="password"
-            className={passwordNotValid ? styles.invalid : undefined}
-            onChange={(event) =>
-              handleInputChange("password", event.target.value)
-            }
-          />
-        </p>
+          <p>
+            <MyLabel
+              $invalid={nameNotValid}
+              className={nameNotValid ? styles.invalid : undefined}
+            >
+              Name
+            </MyLabel>
+            <Input
+              $invalid={nameNotValid}
+              type="text"
+              className={nameNotValid ? styles.invalid : undefined}
+              onChange={(event) => handleInputChange("name", event.target.value)}
+            />
+          </p>
       </ControlContainer>
       <div className={styles.actions}>
         <button
@@ -171,7 +181,7 @@ export default function AuthInputs() {
         </label>
       </div>
       
-      <CSSInlineDiv $invalid={emailNotValid}>
+      <CSSInlineDiv $invalid={emailNotValid || nameNotValid}>
         <CSSInlineLabel>
           Inline Style 👍
         </CSSInlineLabel>
