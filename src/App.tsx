@@ -1,70 +1,24 @@
-import { useState } from "react";
 import "./App.css";
-import Header from "./components/Header";
-import AuthInputs from "./components/AuthInputs";
-import Nationalize from "./components/Nationalize";
-import ScreenSizeMonitor from "./components/ScreenSizeMonitor";
+import { Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  const [count, setCount] = useState(0);
-  const [isEven, setIsEven] = useState(false);
-
-  function handleCount() {
-    setCount((count) => count + 1);
-    handleIsEven();
-  }
-
-  function handleIsEven() {
-    setIsEven(count % 2 === 0);
-  }
-
+export default function App() {
   return (
     <>
-      <Header />
+      <Navigation />
       <main>
-        <div className="card">
-          <button
-            onClick={handleCount}
-            className={`clear-button ${isEven ? "even" : "odd"}`}
-          >
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs"></p>
-
-        <div className="card">
-          <AuthInputs />
-        </div>
-        <div className="card">
-          <Nationalize />
-        </div>
-        <div className="card">
-          <ScreenSizeMonitor />
-        </div>
-        <div className="card">
-          <h2>Tailwind test:</h2>
-          <div className="space-y-4 text-center font-mono text-xs font-bold text-white">
-            <div className="hidden w-96 rounded-lg bg-blue-500 px-4 py-2 sm:block">
-              w-96
-            </div>
-            <div className="hidden w-80 rounded-lg bg-blue-500 px-4 py-2 sm:block">
-              w-80
-            </div>
-            <div className="hidden w-64 rounded-lg bg-blue-500 px-4 py-2 sm:block">
-              w-64
-            </div>
-            <div className="w-48 rounded-lg bg-blue-500 px-4 py-2">w-48</div>
-            <div className="w-40 rounded-lg bg-blue-500 px-4 py-2">w-40</div>
-            <div className="w-32 rounded-lg bg-blue-500 px-4 py-2">w-32</div>
-            <div className="w-24 rounded-lg bg-blue-500 px-4 py-2">w-24</div>
-          </div>
-        </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/about"
+            element={<About info="This prop came from the Route element in App.tsx" />}
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
     </>
   );
 }
-
-export default App;

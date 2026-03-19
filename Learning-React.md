@@ -9,6 +9,10 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
       - [The complete workflow:](#the-complete-workflow)
     - [State](#state)
     - [Type](#type)
+    - [Debugging react apps](#debugging-react-apps)
+    - [Good practices](#good-practices)
+      - [Import images and use them as variables:](#import-images-and-use-them-as-variables)
+      - [Each `Component` should be in a separate file](#each-component-should-be-in-a-separate-file)
   - [Component](#component)
     - [Props (properties)](#props-properties)
       - [Object destructuring](#object-destructuring)
@@ -28,10 +32,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useRef()](#useref)
     - [useEffect()](#useeffect)
     - [useQuery()](#usequery)
-  - [Debugging react apps](#debugging-react-apps)
-  - [Good practices](#good-practices)
-    - [Import images and use them as variables:](#import-images-and-use-them-as-variables)
-    - [Each `Component` should be in a separate file](#each-component-should-be-in-a-separate-file)
+  - [Router](#router)
 
 
 ## React & TypeScript Basics
@@ -123,6 +124,67 @@ type User = {
   age: number;
 };
 ```
+
+### Debugging react apps
+- Find the sources in Chrome DevTools and put breakpoints where needed.
+- In StrictMode (development), React intentionally mounts and unmounts components twice to help surface side-effects.
+- React DevTools: Install the browser extension for inspecting component trees and hooks.
+
+### Good practices
+
+#### Import images and use them as variables:
+```tsx
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+
+...
+<img src={viteLogo} className="logo" alt="Vite logo" />
+```
+
+#### Each `Component` should be in a separate file
+
+- File has same name as the component
+- Components live under `src/components`. You can add subfolders as needed, adjusting import paths.
+- Export the component to make it accessible to other files.
+```tsx
+// In src/components/YourComponent.tsx
+import reactLogo from '../assets/react.svg'; // adapt url to ../assets
+
+export default function YourComponent() { return <div /> }
+// In App.tsx
+import Header from './components/YourComponent.tsx';
+```
+- Style files (CSS) related to a component are typically colocated next to it using the same base name.
+  - ❗Styles defined in a global CSS file will affect the whole app unless you scope them with CSS Modules.
+
+![alt text](image.png)
+
+Import and use it:
+```tsx
+import './Header.css'
+
+export default function Header() { return <header /> }
+```
+
+- Functions received as props that are event handlers should start with `on` (e.g., `onClick`, `onSelect`).
+
+```tsx
+export default function TabButton({ children, onSelect }: { children?: React.ReactNode; onSelect?: () => void }) {
+  return (
+    <li>
+      <button onClick={onSelect}>{children}</button>
+    </li>
+  );
+}
+```
+
+Note: when rendering lists, always provide a unique `key` prop for each item to help React optimize rendering.
+
+Useful links:
+
+- React Hooks: https://reactjs.org/docs/hooks-intro.html
+- React Fragments: https://reactjs.org/docs/fragments.html
+
 
 ## Component
 
@@ -713,63 +775,32 @@ export async function fetchMyData(query: string): Promise<ResponeData> {
 }
 ```
 
+## Router
 
-## Debugging react apps
-- Find the sources in Chrome DevTools and put breakpoints where needed.
-- In StrictMode (development), React intentionally mounts and unmounts components twice to help surface side-effects.
-- React DevTools: Install the browser extension for inspecting component trees and hooks.
+Routing means handling navigation between different views.
 
-## Good practices
+In React there's only one single html page (the one we load in `index.html`) and we render different components based on the URL. To manage this, we can use a routing library like `react-router-dom`.
 
-### Import images and use them as variables:
-```tsx
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+When the user clicks on a link:
+1. The Router intercepts the click.
+2. It updates the URL in the address bar (e.g., from / to /search).
+3. React looks at its "map" and says, "Oh, the URL is now /search. I will throw away the Home component and render the Search component instead."
 
-...
-<img src={viteLogo} className="logo" alt="Vite logo" />
+First, install it:
+```bash
+npm install react-router-dom
 ```
 
-### Each `Component` should be in a separate file
-
-- File has same name as the component
-- Components live under `src/components`. You can add subfolders as needed, adjusting import paths.
-- Export the component to make it accessible to other files.
+This is how a `Route` looks like:
+* `Routes` is the parent component that wraps all the `Route` components. It listens to URL changes and renders the matching route.
+  * A `Route` outside of `Routes` will be rendered on every page. This is useful for components like `Navigation` that should be visible on all pages.
+* `path`: the URL that triggers this route (e.g., `/search`).
+* `element`: the component that will be rendered when the URL matches the path. You can also pass props to this component if needed. 
 ```tsx
-// In src/components/YourComponent.tsx
-import reactLogo from '../assets/react.svg'; // adapt url to ../assets
-
-export default function YourComponent() { return <div /> }
-// In App.tsx
-import Header from './components/YourComponent.tsx';
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/search" element={<Search />} />
+  <Route path="/routeurl" element={<MyComponent someProp={someValue} />} />
+</Routes>
+<Route path="/search" element={<PersistentComponent/>} />
 ```
-- Style files (CSS) related to a component are typically colocated next to it using the same base name.
-  - ❗Styles defined in a global CSS file will affect the whole app unless you scope them with CSS Modules.
-
-![alt text](image.png)
-
-Import and use it:
-```tsx
-import './Header.css'
-
-export default function Header() { return <header /> }
-```
-
-- Functions received as props that are event handlers should start with `on` (e.g., `onClick`, `onSelect`).
-
-```tsx
-export default function TabButton({ children, onSelect }: { children?: React.ReactNode; onSelect?: () => void }) {
-  return (
-    <li>
-      <button onClick={onSelect}>{children}</button>
-    </li>
-  );
-}
-```
-
-Note: when rendering lists, always provide a unique `key` prop for each item to help React optimize rendering.
-
-Useful links:
-
-- React Hooks: https://reactjs.org/docs/hooks-intro.html
-- React Fragments: https://reactjs.org/docs/fragments.html

@@ -9,6 +9,13 @@ header img {
   object-fit: contain;
 }
 
+.logo-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
 header h1 {
   margin: 0;
   font-family: "Roboto Condensed", sans-serif;
