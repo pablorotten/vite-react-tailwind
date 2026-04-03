@@ -823,6 +823,11 @@ export default function MyComponent({ someProp }) {
 
   const navigate = useNavigate();
 
+  function moveToOtherPage() {
+    console.log("User is leaving the page...");
+    navigate("/otherpage");
+  }
+
   return (
     <div>
       <h1>My Component</h1>
@@ -831,7 +836,7 @@ export default function MyComponent({ someProp }) {
       <Link to="/search">Go to Search</Link>
       <Link to="/routewithparams/123/john">Link to Route with Params</Link>
       <button onClick={() => navigate(-1)}>Go back</button>
-      <button onClick={() => navigate('/about')}>Go to About</button>
+      <button onClick={moveToOtherPage}>Go to Other Page</button>
       <button onClick={() => navigate('/routewithparams/456/jane')}>Navigate to Route with Params with different values</button>
     </div>
   );
