@@ -586,7 +586,7 @@ Returns a value and a setter function to update the value. Attacht it to a compo
 
 In this example:
 * Initially `count` is `0`
-* We pass a function to `setCount()` that takes `count` as parameter and adds one to it.
+* We pass a function to `setCount(c)` where `c` is the current value of `count` and add `1` to it
 * We attatch `setCount()` to a button to use it
 * Every time the user clicks on the button, it will add 1 to `count` 
 * This will re-render the component executing the functon `App()` again to update the DOM with the new value of `count`
@@ -598,7 +598,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <button onClick={() => setCount((count) => count + 1)}>
+    <button onClick={() => setCount((c) => c + 1)}>
       count is {count}
     </button>
   );
@@ -777,7 +777,7 @@ export async function fetchMyData(query: string): Promise<ResponeData> {
 
 ## Router
 
-Routing means handling navigation between different views.
+Routes is a map that tells React what to render depending on the url.
 
 In React there's only one single html page (the one we load in `index.html`) and we render different components based on the URL. To manage this, we can use a routing library like `react-router-dom`.
 
@@ -793,33 +793,46 @@ npm install react-router-dom
 
 This is how a `Route` looks like:
 * `Routes` is the parent component that wraps all the `Route` components. It listens to URL changes and renders the matching route.
-  * A `Route` outside of `Routes` will be rendered on every page. This is useful for components like `Navigation` that should be visible on all pages.
-* `path`: the URL that triggers this route (e.g., `/search`).
-* `element`: the component that will be rendered when the URL matches the path. You can also pass props to this component if needed. 
-* `Link`: Updates the URL and relies on `Routes` to render the correct component without a full page refresh.  
-* `useNavigate`: A hook that gives you a function to programmatically navigate to a different URL (e.g., after a form submission). 
-* `useParams`: A hook that allows you to read dynamic URL parameters (e.g., `/user/:id`).If the URL is `/user/123`, `useParams()` will return `{ id: '123' }`.
+  * `Route` define a route. It has those elements:
+    * `path`: the URL that triggers this route (e.g., `/search`).
+    * `element`: the component that will be rendered when the URL matches the path. You can also pass props to this component if needed.
+
+> [!Catuion]
+> Components defined outside the `Routes` block will be rendered on every page. This is useful for components like `Navigation` that should be visible on all pages.
+
+How to change the URL: 
+* `Link`/`NavLink`: A classic anchor tag replacement. Updates the URL **when user clicks on it**.  
+* `useNavigate`: Function that changes the url from code. Similar to `window.location.href = '/search'` but without reloading the page. Useful for programmatic navigation (e.g., redirect after form submit). 
+* `useParams`: Hook that allows you to access the dynamic segments of the URL. For example, if the URL is `/user/123`, `useParams()` will return `{ id: '123' }`.
 
 **App.tsx**
 ```tsx
 <Routes>
   <Route path="/" element={<Home />} />
-  <Route path="/search" element={<Search />} />
+  <Route path="/about" element={<About />} />
   <Route path="/routeurl" element={<MyComponent someProp={someValue} />} />
   <Route path="/routewithparams/:id/:name" element={<ComponentWithParams />} />
 </Routes>
-<Route path="/search" element={<PersistentComponent/>} />
+<ComponentOutsideRoutes />
 ```
+
 **MyComponent.tsx**
 ```tsx
 import { Link } from 'react-router-dom';
 export default function MyComponent({ someProp }) {
+
+  const navigate = useNavigate();
+
   return (
     <div>
       <h1>My Component</h1>
       <p>Prop value: {someProp}</p>
       <Link to="/">Go back to Home</Link>
       <Link to="/search">Go to Search</Link>
+      <Link to="/routewithparams/123/john">Link to Route with Params</Link>
+      <button onClick={() => navigate(-1)}>Go back</button>
+      <button onClick={() => navigate('/about')}>Go to About</button>
+      <button onClick={() => navigate('/routewithparams/456/jane')}>Navigate to Route with Params with different values</button>
     </div>
   );
 }
