@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import AuthInputs from "../components/AuthInputs";
 import Nationalize from "../components/Nationalize";
 import ScreenSizeMonitor from "../components/ScreenSizeMonitor";
+import FlexibleCard from "../components/FlexibleCard";
 import "../App.css";
 
 export default function Home() {
@@ -104,6 +105,35 @@ export default function Home() {
         </div>
         <div className="card">
           <Nationalize />
+        </div>
+        <div className="card">
+          <h2 className="text-xl font-bold mb-2">Component Composition & Reusability</h2>
+          <p className="mb-3 text-sm text-gray-600">
+            The <code>children</code> prop lets you pass arbitrary JSX into a
+            wrapper component so it can render whatever you give it. Below are
+            three examples showing how the same wrapper can be reused.
+          </p>
+
+          <div className="space-y-3">
+            <FlexibleCard title="Basic wrapper">
+              <p>This is a simple use of <code>children</code> — plain text.</p>
+            </FlexibleCard>
+
+            <FlexibleCard title="Nested components">
+              <AuthInputs />
+            </FlexibleCard>
+
+            <FlexibleCard
+              title="With footer and custom class"
+              footer={<button className="px-3 py-1 bg-indigo-600 text-white rounded">Action</button>}
+              className="border-l-4 border-indigo-200"
+            >
+              <p>
+                You can pass any JSX as children — even other components — and
+                combine them with props like <code>footer</code>.
+              </p>
+            </FlexibleCard>
+          </div>
         </div>
         <div className="card">
           <ScreenSizeMonitor />

@@ -33,6 +33,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useEffect()](#useeffect)
     - [useQuery()](#usequery)
   - [Router](#router)
+  - [Component Composition \& Reusability](#component-composition--reusability)
 
 
 ## React & TypeScript Basics
@@ -855,6 +856,31 @@ export default function ComponentWithParams() {
       <p>ID: {id}</p>
       <p>Name: {name}</p>
     </div>
+  );
+}
+```
+
+## Component Composition & Reusability
+
+Create a component that accepts `children` and other props to create a flexible wrapper. This allows you to compose different UIs without duplicating layout styles.
+
+In this example we pass a title that is a string and a children prop that can be any ReactNode (string, component, array of components, etc). The `FlexibleCard` component will render the title and the children in a section. We can use this component to create different cards with different content without duplicating the layout styles.
+```tsx
+
+type FlexibleCardProps = {
+  title?: string;
+  children: ReactNode;
+};
+
+export default function FlexibleCard({
+  title,
+  children
+}: FlexibleCardProps) {
+  return (
+    <section>
+      {title && <h3>{title}</h3>}
+      <div>{children}</div>
+    </section>
   );
 }
 ```
