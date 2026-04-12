@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import AuthInputs from "../components/AuthInputs";
 import Nationalize from "../components/Nationalize";
 import ScreenSizeMonitor from "../components/ScreenSizeMonitor";
+import FlexibleCardPresenter from "../components/FlexibleCardPresenter";
 import FlexibleCard from "../components/FlexibleCard";
 import "../App.css";
 
@@ -133,6 +134,14 @@ export default function Home() {
                 combine them with props like <code>footer</code>.
               </p>
             </FlexibleCard>
+            {/* Presenter-first FlexibleCard example for comparison */}
+            <FlexibleCardPresenter
+              render={({ title, content, footer }) => (
+                <FlexibleCard title={title} footer={footer}>
+                  {content}
+                </FlexibleCard>
+              )}
+            />
           </div>
         </div>
         <div className="card">

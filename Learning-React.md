@@ -34,6 +34,8 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useQuery()](#usequery)
   - [Router](#router)
   - [Component Composition \& Reusability](#component-composition--reusability)
+    - [Children pattern (`children` prop)](#children-pattern-children-prop)
+    - [Presenter pattern](#presenter-pattern)
 
 
 ## React & TypeScript Basics
@@ -862,11 +864,12 @@ export default function ComponentWithParams() {
 
 ## Component Composition & Reusability
 
-Create a component that accepts `children` and other props to create a flexible wrapper. This allows you to compose different UIs without duplicating layout styles.
+### Children pattern (`children` prop)
 
-In this example we pass a title that is a string and a children prop that can be any ReactNode (string, component, array of components, etc). The `FlexibleCard` component will render the title and the children in a section. We can use this component to create different cards with different content without duplicating the layout styles.
+Create a component that accepts `children` to create a flexible wrapper. This allows you to compose different UIs without duplicating layout styles.
+
+The `Component`  will render the children in a section. The `children` can be any valid JSX: text, HTML elements, or even other components.
 ```tsx
-
 type FlexibleCardProps = {
   title?: string;
   children: ReactNode;
@@ -884,3 +887,47 @@ export default function FlexibleCard({
   );
 }
 ```
+
+Usage:
+```tsx
+// Children is a <p> element
+<FlexibleCard title="Card Title">
+  <p>This is the content of the card.</p>
+</FlexibleCard>
+// Children is another component
+<FlexibleCard title="Another Card">
+  <AnotherComponent />
+</FlexibleCard>
+```
+
+In this case, the **parent** (the component that uses `FlexibleCard`) decides what the children are.
+
+### Presenter pattern
+
+In this pattern, is the Child component (the presenter) the one that decides what to render as children. The parent just provides the data and the presenter takes care of how to display it.
+
+```tsx
+
+type UserCardProps = {
+  user: User;
+};
+
+export default function UserCard({ user }: UserCardProps) {
+  return (
+    <section>
+      <h3>{user.name}</h3>
+      <p>Age: {user.age}</p>
+    </section>
+  );
+}
+``` 
+
+Usage:
+```tsx
+const user = { name: 'John Doe', age: 30 };
+<UserCard user={user} />
+```
+
+The **parent** component just passes the `user` data to the `UserCard` **presenter**, and the **presenter** decides how to display that data.
+
+This pattern is useful when you want to separate the logic of fetching/managing data (parent) from the logic of displaying it (presenter). It promotes reusability and separation of concerns.
