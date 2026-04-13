@@ -14,16 +14,6 @@ export default function Header() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <h2>I have default h2 style</h2>
-      <h2
-        style={{
-          color: "#a1ef06",
-          background:
-            "linear-gradient(40deg, #ea00ff, #ea00ff, #03d5ff, #03d5ff)",
-        }}
-      >
-        I have inline h2 style
-      </h2>
     </header>
   );
 }

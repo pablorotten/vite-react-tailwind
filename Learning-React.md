@@ -900,34 +900,72 @@ Usage:
 </FlexibleCard>
 ```
 
-In this case, the **parent** (the component that uses `FlexibleCard`) decides what the children are.
+In this case, the **parent** sends already-build UI as children. The **child** (the `FlexibleCard` component) just renders it in a section with a title.
 
 ### Presenter pattern
 
-In this pattern, is the Child component (the presenter) the one that decides what to render as children. The parent just provides the data and the presenter takes care of how to display it.
+A component that defines a behavior but not a specific UI. The parent will choose the UI as a prop.
 
+In this example, `UserList` is a presenter:
+* The prop `render` is a function that returns a `ReactNode`
+* The parent can pass any UI it wants 
+* The `UserList` behavior will be the same: pick 3 random users and render them within the UI provided by the parent.
 ```tsx
-
-type UserCardProps = {
-  user: User;
+type UserListProps = {
+  render?: (props: {
+    users: string[];
+    pickRandomUsers: () => void;
+  }) => ReactNode;
 };
 
-export default function UserCard({ user }: UserCardProps) {
-  return (
-    <section>
-      <h3>{user.name}</h3>
-      <p>Age: {user.age}</p>
-    </section>
-  );
+const allUsers = [
+  "Ava Carter",
+  "Leo Bennett",
+  ...
+];
+
+function pickThreeRandomUsers(userList: string[]): string[] {
+  ...
 }
-``` 
+
+export default function UserList({ render }: UserListProps) {
+  const [users, setUsers] = useState<string[]>(() => pickThreeRandomUsers(allUsers));
+
+  const pickRandomUsers = () => {
+    setUsers(pickThreeRandomUsers(allUsers));
+  };
+
+  if (render) return <>{render({ users, pickRandomUsers })}</>;
+  return null;
+}
+```
 
 Usage:
 ```tsx
-const user = { name: 'John Doe', age: 30 };
-<UserCard user={user} />
+// rendering using ul-li list
+<UserList
+  render={({ users, pickRandomUsers }) => (
+    <div>
+      <h2>Random Users</h2>
+      <ul>
+        {users.map((user) => (
+          <li key={user}>{user}</li>
+        ))}
+      </ul>
+      <button onClick={pickRandomUsers}>Pick New Users</button>
+    </div>
+  )}
+/>
+// rendering using a custom UserCard component
+<UserList
+  render={({ users, pickRandomUsers }) => (
+    <div>
+      <h2>Random Users</h2>
+      {users.map((user) => (
+        <UserCard key={user} name={user} />
+      ))}
+      <button onClick={pickRandomUsers}>Pick New Users</button>
+    </div>
+  )}
 ```
 
-The **parent** component just passes the `user` data to the `UserCard` **presenter**, and the **presenter** decides how to display that data.
-
-This pattern is useful when you want to separate the logic of fetching/managing data (parent) from the logic of displaying it (presenter). It promotes reusability and separation of concerns.
