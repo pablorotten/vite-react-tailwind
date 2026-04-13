@@ -7,8 +7,7 @@ type UserListPresenterProps = {
   }) => ReactNode;
 };
 
-const allUsers = [
-  "Ava Carter",
+const allUsers = ["Ava Carter",
   "Leo Bennett",
   "Mia Thompson",
   "Noah Rivera",

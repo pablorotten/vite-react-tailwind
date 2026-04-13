@@ -34,7 +34,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useQuery()](#usequery)
   - [Router](#router)
   - [Component Composition \& Reusability](#component-composition--reusability)
-    - [Children pattern (`children` prop)](#children-pattern-children-prop)
+    - [Component Composition via Children](#component-composition-via-children)
     - [Presenter pattern](#presenter-pattern)
 
 
@@ -864,21 +864,24 @@ export default function ComponentWithParams() {
 
 ## Component Composition & Reusability
 
-### Children pattern (`children` prop)
+### Component Composition via Children
+
+<img src="child.gif" align="right" width="800">
 
 Create a component that accepts `children` to create a flexible wrapper. This allows you to compose different UIs without duplicating layout styles.
 
-The `Component`  will render the children in a section. The `children` can be any valid JSX: text, HTML elements, or even other components.
+The `Wrapper` component will render the children in a section. The `children` can be any valid JSX: text, HTML elements, or even other components.
+
 ```tsx
-type FlexibleCardProps = {
+type WrapperProps = {
   title?: string;
   children: ReactNode;
 };
 
-export default function FlexibleCard({
+export default function Wrapper({
   title,
   children
-}: FlexibleCardProps) {
+}: WrapperProps) {
   return (
     <section>
       {title && <h3>{title}</h3>}
@@ -886,86 +889,84 @@ export default function FlexibleCard({
     </section>
   );
 }
-```
 
-Usage:
-```tsx
+//Usage in Parent component:
+
 // Children is a <p> element
-<FlexibleCard title="Card Title">
+<Wrapper title="Card Title">
   <p>This is the content of the card.</p>
-</FlexibleCard>
-// Children is another component
-<FlexibleCard title="Another Card">
+</Wrapper>
+// Children is AnotherComponent
+<Wrapper title="Another Card">
   <AnotherComponent />
-</FlexibleCard>
+</Wrapper>
 ```
 
 In this case, the **parent** sends already-build UI as children. The **child** (the `FlexibleCard` component) just renders it in a section with a title.
 
 ### Presenter pattern
 
-A component that defines a behavior but not a specific UI. The parent will choose the UI as a prop.
+<img src="presenter.gif" align="right" width="700">
 
-In this example, `UserList` is a presenter:
-* The prop `render` is a function that returns a `ReactNode`
-* The parent can pass any UI it wants 
-* The `UserList` behavior will be the same: pick 3 random users and render them within the UI provided by the parent.
+A presenter component defines a behavior but not a specific UI. Doesn't know how to render itself. Is the parent who defines the UI and provide it via prop.
+
+In this example of `Presenter`:
+* The `Presenter` behavior is: pick 3 random elements and render them.
+* The `Presenter` doesn't know how to render those elements.
+* The `Parent` sends the UI via the `render` prop, which is a function that returns a `ReactNode`.
+* The parent can pass different UIs every time. 
+
 ```tsx
-type UserListProps = {
+// Presenter props is a function that returns a ReactNode. This ReactNode is the UI provided by the parent.
+type PresenterProps = {
   render?: (props: {
-    users: string[];
-    pickRandomUsers: () => void;
+    elements: string[];
+    pickElements: () => void;
   }) => ReactNode;
 };
 
-const allUsers = [
-  "Ava Carter",
-  "Leo Bennett",
-  ...
-];
+// The presenter logic to get and pick elements
+const elements = ['Element 1', 'Element 2', ...];
+function pickElementsLogic(elementsList: string[]): string[] { ... }
 
-function pickThreeRandomUsers(userList: string[]): string[] {
-  ...
-}
+export default function Presenter({ render }: PresenterProps) {
+  const [elementsState, setElementsState] = useState<string[]>(() => pickElementsLogic(elements));
 
-export default function UserList({ render }: UserListProps) {
-  const [users, setUsers] = useState<string[]>(() => pickThreeRandomUsers(allUsers));
-
-  const pickRandomUsers = () => {
-    setUsers(pickThreeRandomUsers(allUsers));
+  const pickElements = () => {
+    setElementsState(pickElementsLogic(elements));
   };
 
-  if (render) return <>{render({ users, pickRandomUsers })}</>;
-  return null;
+  return <>{render({ elements: elementsState, pickElements })}</>;
 }
 ```
 
 Usage:
 ```tsx
-// rendering using ul-li list
-<UserList
-  render={({ users, pickRandomUsers }) => (
+// Parent tells how to render the presenter by passing a function as prop
+<Presenter
+  render={({ elements, pickElements }) => (
     <div>
       <h2>Random Users</h2>
       <ul>
-        {users.map((user) => (
-          <li key={user}>{user}</li>
+        {elements.map((element) => (
+          <li key={element}>{element}</li>
         ))}
       </ul>
-      <button onClick={pickRandomUsers}>Pick New Users</button>
+      <button onClick={pickElements}>Pick New Elements</button>
     </div>
   )}
 />
-// rendering using a custom UserCard component
-<UserList
-  render={({ users, pickRandomUsers }) => (
+// rendering using a custom ElementCard component
+<Presenter
+  render={({ elements, pickElements }) => (
     <div>
-      <h2>Random Users</h2>
-      {users.map((user) => (
-        <UserCard key={user} name={user} />
+      <h2>Random Elements</h2>
+      {elements.map((element) => (
+        <ElementCard key={element} name={element} />
       ))}
-      <button onClick={pickRandomUsers}>Pick New Users</button>
+      <button onClick={pickElements}>Pick New Elements</button>
     </div>
   )}
+/>
 ```
 

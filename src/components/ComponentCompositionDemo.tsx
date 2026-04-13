@@ -66,6 +66,29 @@ export default function ComponentCompositionDemo() {
             </div>
           )}
         />
+
+        <UserListPresenter
+          render={({ users, pickRandomUsers }) => (
+            <div className="p-4 rounded border border-indigo-200 bg-indigo-50 text-center">
+              <p className="font-semibold mb-2">Showing users in a 3x1 table</p>
+              <table className="mx-auto mb-3 border border-indigo-200 bg-white">
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user} className="border-b border-indigo-200 last:border-b-0">
+                      <td className="px-4 py-2">{user}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button
+                onClick={pickRandomUsers}
+                className="px-3 py-1 bg-indigo-600 text-white rounded"
+              >
+                Shuffle table users
+              </button>
+            </div>
+          )}
+        />
       </div>
     </div>
   );
