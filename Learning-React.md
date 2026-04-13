@@ -866,7 +866,7 @@ export default function ComponentWithParams() {
 
 ### Component Composition via Children
 
-<img src="child.gif" align="right" width="800">
+<img src="child.gif" align="right" width="700">
 
 Create a component that accepts `children` to create a flexible wrapper. This allows you to compose different UIs without duplicating layout styles.
 
@@ -906,7 +906,7 @@ In this case, the **parent** sends already-build UI as children. The **child** (
 
 ### Presenter pattern
 
-<img src="presenter.gif" align="right" width="700">
+<img src="presenter.gif" align="right" width="600">
 
 A presenter component defines a behavior but not a specific UI. Doesn't know how to render itself. Is the parent who defines the UI and provide it via prop.
 
