@@ -15,10 +15,11 @@ export default function ContextApiDemo() {
     <UserContext.Provider value={null}>
       <div className="space-y-4">
         <h2>✅ Context API Solution ✅</h2>
-        <p className="text-sm text-gray-500">
-          <code>currentUser</code> is provided here via{" "}
-          <code>{"<UserContext.Provider value={currentUser}>"}</code>. No prop
-          passed to any child.
+        <p className="text-sm italic text-gray-400">
+          Defines context but user is <code>null</code>
+        </p>
+        <p>
+          <code>{"<UserContext.Provider value={null}>"}</code>
         </p>
         <Component1 />
       </div>
@@ -27,23 +28,21 @@ export default function ContextApiDemo() {
 }
 
 function Component1() {
-  const existingUser = useContext(UserContext);
   const currentUser: User = { name: "Alice", role: "editor" };
 
   return (
     // Add user to context
-    <UserContext.Provider value={existingUser ?? currentUser}>
+    <UserContext.Provider value={currentUser}>
       <div className="border rounded-lg p-4 bg-gray-50 space-y-2">
         <p>
           <code>{"function Component1()"}</code>
         </p>
-        <p>
-          <code>
-            {"const currentUser: User = { name: 'Alice', role: 'admin' };"}
-          </code>
-        </p>
+
         <p className="text-sm italic text-gray-400">
           Stores <code>currentUser</code> in <code>Context</code>
+        </p>
+        <p>
+          <code>{"<UserContext.Provider value={currentUser}>"}</code>
         </p>
         <img
           src="/images/ContextAPI.gif"
@@ -104,8 +103,11 @@ function Component4() {
   return (
     <div className="border rounded-lg p-4 bg-white space-y-1">
       <code>{"function Component4()"}</code>
+      <p>
+        <code>{"const user = useContext(UserContext);"}</code>
+      </p>
       <p className="text-sm italic text-gray-400">
-        Extracts <code>currentUser</code> from <code>Context</code>
+        Consumes <code>user</code> from <code>Context</code>
       </p>
       <img
         src="/images/ContextAPI2.gif"
