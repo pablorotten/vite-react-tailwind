@@ -36,6 +36,10 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
   - [The Context API \& Prop Drilling](#the-context-api--prop-drilling)
     - [⛏️ Prop Drilling problem](#️-prop-drilling-problem)
     - [☁️ Context API](#️-context-api)
+    - [When to use Context vs Lifting State vs a State Library](#when-to-use-context-vs-lifting-state-vs-a-state-library)
+      - [⛏️✅ Lift state up](#️-lift-state-up)
+      - [☁️ Context API when:](#️-context-api-when)
+      - [🏢 State library (Zustand, Redux, Jotai…)](#-state-library-zustand-redux-jotai)
   - [Component Composition \& Reusability](#component-composition--reusability)
     - [Component Composition via Children](#component-composition-via-children)
     - [Presenter pattern](#presenter-pattern)
@@ -927,6 +931,26 @@ function Component4() {
   return <div>{data}</div>;
 }
 ```
+
+### When to use Context vs Lifting State vs a State Library
+
+#### ⛏️✅ Lift state up
+It's just acceptable **prop drilling**:
+- Two sibling components need to share the same piece of state.
+- The shared state is local to a small part of the component tree.
+- Simple parent → child prop passing (1–2 levels deep).
+
+#### ☁️ Context API when:
+- Data needs to be accessible across many components at different nesting levels (e.g. current user, theme, locale).
+- The data changes infrequently (context re-renders all consumers on every change).
+- You want to avoid prop drilling without adding a dependency.
+
+#### 🏢 State library (Zustand, Redux, Jotai…)
+State libraries are external packages that manage global state outside of React's built-in tools. Instead of lifting state up or using Context, you store state in a central "store" that any component can read from or write to directly — no prop passing, no context providers needed.
+- State is complex, large, or shared across many unrelated parts of the app.
+- You need fine-grained subscriptions (only re-render what changed).
+- You need time-travel debugging, middleware, or devtools.
+- Context performance becomes a problem (too many re-renders).
 
 ## Component Composition & Reusability
 

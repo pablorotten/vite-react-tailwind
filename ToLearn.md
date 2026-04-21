@@ -34,7 +34,7 @@
     - `useParams`: Read dynamic URL parameters (e.g. `/user/:id`).
     - Nested routes and shared layouts.
 
-- [ ] **The Context API & Prop Drilling**
+- [x] **The Context API & Prop Drilling**
     - Prop drilling: passing data through many layers as props (the problem).
     - `createContext` + `Context.Provider`: create and provide global data.
     - `useContext`: consume context in any child component.
