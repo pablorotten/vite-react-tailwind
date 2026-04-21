@@ -7,7 +7,8 @@ type UserListPresenterProps = {
   }) => ReactNode;
 };
 
-const allUsers = ["Ava Carter",
+const allUsers = [
+  "Ava Carter",
   "Leo Bennett",
   "Mia Thompson",
   "Noah Rivera",
@@ -25,7 +26,9 @@ function pickThreeRandomUsers(userList: string[]): string[] {
 }
 
 export default function UserListPresenter({ render }: UserListPresenterProps) {
-  const [users, setUsers] = useState<string[]>(() => pickThreeRandomUsers(allUsers));
+  const [users, setUsers] = useState<string[]>(() =>
+    pickThreeRandomUsers(allUsers),
+  );
 
   const pickRandomUsers = () => {
     setUsers(pickThreeRandomUsers(allUsers));

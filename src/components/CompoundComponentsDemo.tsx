@@ -25,7 +25,9 @@ export default function CompoundComponentsDemo() {
 
   return (
     <div className="space-y-4">
-        <HeadingWithAnchor id="compound-components-pattern" level={2}>Compound components pattern</HeadingWithAnchor>
+      <HeadingWithAnchor id="compound-components-pattern" level={2}>
+        Compound components pattern
+      </HeadingWithAnchor>
 
       {/* ── Static example: each option has totally different markup ── */}
       <FlexibleCard title="Static example — each option has completely different formatting">

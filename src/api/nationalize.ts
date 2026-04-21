@@ -1,5 +1,9 @@
 export type Country = { country_id: string; probability: number };
-export type NationalizeResponse = { count: number; name: string; country: Country[] };
+export type NationalizeResponse = {
+  count: number;
+  name: string;
+  country: Country[];
+};
 
 export async function fetchNationalize(name: string, signal?: AbortSignal) {
   const url = `https://api.nationalize.io/?name=${encodeURIComponent(name)}`;

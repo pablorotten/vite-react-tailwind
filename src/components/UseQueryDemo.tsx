@@ -3,7 +3,7 @@ import { useNationalize } from "../hooks/useNationalize";
 import type { Country } from "../api/nationalize";
 import HeadingWithAnchor from "./HeadingWithAnchor";
 
-export default function UseQueryDemo() {
+export default function FetchingDataDemo() {
   const [name, setName] = useState("");
   const [query, setQuery] = useState<string | null>(null); // last submitted name
 
@@ -18,65 +18,72 @@ export default function UseQueryDemo() {
   const countries: Country[] = data?.country ?? []; // if data exists, get the countries. If no countries, return empty array
 
   return (
-    <div className="card">
-      <HeadingWithAnchor id="usequery-example" level={2}>useQuery() example</HeadingWithAnchor>
-      <section>
-        <h3 style={{ marginBottom: 12 }}>Guess countries from a name</h3>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 8,
-            marginBottom: 8,
-          }}
-        >
-          <input
-            aria-label="name"
-            placeholder="Enter a name"
-            value={name}
-            onChange={(e) => setName(e.target.value)} // when there's an event on this input, setName with the input value (e.target.value)
+    <>
+      <HeadingWithAnchor id="fetching-data" level={1}>
+        Fetching Data
+      </HeadingWithAnchor>
+      <div className="card">
+        <HeadingWithAnchor id="usequery-example" level={2}>
+          useQuery() example
+        </HeadingWithAnchor>
+        <section>
+          <h3 style={{ marginBottom: 12 }}>Guess countries from a name</h3>
+          <form
+            onSubmit={handleSubmit}
             style={{
-              padding: "6px 8px",
-              borderRadius: 6,
-              border: "1px solid #ccc",
-            }}
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !name.trim()}
-            style={{
-              padding: "6px 12px",
-              borderRadius: 6,
-              border: "1px solid transparent",
-              backgroundColor:
-                isLoading || !name.trim() ? "#9ca3af" : "#4f46e5",
-              color: "#ffffff",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 8,
             }}
           >
-            {isLoading ? "Searching..." : "Search"}
-          </button>
-        </form>
+            <input
+              aria-label="name"
+              placeholder="Enter a name"
+              value={name}
+              onChange={(e) => setName(e.target.value)} // when there's an event on this input, setName with the input value (e.target.value)
+              style={{
+                padding: "6px 8px",
+                borderRadius: 6,
+                border: "1px solid #ccc",
+              }}
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !name.trim()}
+              style={{
+                padding: "6px 12px",
+                borderRadius: 6,
+                border: "1px solid transparent",
+                backgroundColor:
+                  isLoading || !name.trim() ? "#9ca3af" : "#4f46e5",
+                color: "#ffffff",
+              }}
+            >
+              {isLoading ? "Searching..." : "Search"}
+            </button>
+          </form>
 
-        {error && (
-          <div style={{ color: "crimson" }}>Error: {error.message}</div>
-        )}
+          {error && (
+            <div style={{ color: "crimson" }}>Error: {error.message}</div>
+          )}
 
-        {!error && !isLoading && countries.length === 0 && query && (
-          <div>No results for “{query}”.</div>
-        )}
+          {!error && !isLoading && countries.length === 0 && query && (
+            <div>No results for “{query}”.</div>
+          )}
 
-        {!error && countries.length > 0 && (
-          <ol>
-            {countries.slice(0, 3).map((c: Country) => (
-              <li key={c.country_id}>
-                {c.country_id} — {(c.probability * 100).toFixed(1)}%
-              </li>
-            ))}
-          </ol>
-        )}
-      </section>
-    </div>
+          {!error && countries.length > 0 && (
+            <ol>
+              {countries.slice(0, 3).map((c: Country) => (
+                <li key={c.country_id}>
+                  {c.country_id} — {(c.probability * 100).toFixed(1)}%
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
+      </div>
+    </>
   );
 }

@@ -6,7 +6,9 @@ import HeadingWithAnchor from "./HeadingWithAnchor";
 export default function ComponentCompositionAndReusabilityDemo() {
   return (
     <>
-      <HeadingWithAnchor id="component-composition-reusability" level={1}>Component Composition & Reusability</HeadingWithAnchor>
+      <HeadingWithAnchor id="component-composition-reusability" level={1}>
+        Component Composition & Reusability
+      </HeadingWithAnchor>
       <div className="card">
         <ChildPatternDemo />
         <PresenterPatternDemo />

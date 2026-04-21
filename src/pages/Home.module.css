@@ -5,7 +5,6 @@
   margin-bottom: 1.5rem;
 }
 
-
 .controls label {
   display: block;
   margin-bottom: 0.5rem;
@@ -24,7 +23,9 @@
   color: #374151;
   border: 1px solid transparent;
   border-radius: 0.25rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 label.invalid {
@@ -67,7 +68,6 @@ input.invalid {
   color: #f0920e;
 }
 
-
 .css-module-controls {
   display: flex;
   flex-direction: column;
@@ -86,7 +86,6 @@ input.invalid {
   color: #6b7280;
   background-color: greenyellow;
 }
-
 
 .css-module-controls.invalid-mail {
   color: #dd2c2c;

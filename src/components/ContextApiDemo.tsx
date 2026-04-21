@@ -3,8 +3,6 @@ import HeadingWithAnchor from "./HeadingWithAnchor";
 import contextApiGif from "../assets/ContextAPI.gif";
 import contextApi2Gif from "../assets/ContextAPI2.gif";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 interface User {
   name: string;
   role: "admin" | "editor" | "viewer";
@@ -17,7 +15,9 @@ export default function ContextApiDemo() {
     // Defines context
     <UserContext.Provider value={null}>
       <div className="space-y-4">
-            <HeadingWithAnchor id="context-api-solution" level={2}>✅ Context API Solution ✅</HeadingWithAnchor>
+        <HeadingWithAnchor id="context-api-solution" level={2}>
+          ✅ Context API Solution ✅
+        </HeadingWithAnchor>
         <p className="text-sm italic text-gray-400">
           Defines context but user is <code>null</code>
         </p>

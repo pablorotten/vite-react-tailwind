@@ -15,7 +15,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route
             path="/about"
-            element={<About info="This prop came from the Route element in App.tsx" />}
+            element={
+              <About info="This prop came from the Route element in App.tsx" />
+            }
           />
           <Route path="/user/:email/:name" element={<User />} />
           <Route path="*" element={<NotFound />} />

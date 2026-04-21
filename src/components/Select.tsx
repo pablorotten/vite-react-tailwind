@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import { createPortal } from "react-dom";
 
 type SelectContextValue = {
@@ -22,7 +28,12 @@ type OptionProps = {
   children: React.ReactNode;
 };
 
-function Select({ value, onChange, placeholder = "Select…", children }: SelectProps) {
+function Select({
+  value,
+  onChange,
+  placeholder = "Select…",
+  children,
+}: SelectProps) {
   const [open, setOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
   const ref = useRef<HTMLDivElement>(null);
@@ -33,8 +44,10 @@ function Select({ value, onChange, placeholder = "Select…", children }: Select
     function handleClickOutside(e: MouseEvent) {
       const target = e.target as Node;
       if (
-        ref.current && !ref.current.contains(target) &&
-        listRef.current && !listRef.current.contains(target)
+        ref.current &&
+        !ref.current.contains(target) &&
+        listRef.current &&
+        !listRef.current.contains(target)
       ) {
         setOpen(false);
       }
@@ -58,13 +71,17 @@ function Select({ value, onChange, placeholder = "Select…", children }: Select
     setOpen((o) => !o);
   }
 
-  // Filters to have only OptionProps and then finds the selected option which it's the one whose value is equals to SelectProps value 
+  // Filters to have only OptionProps and then finds the selected option which it's the one whose value is equals to SelectProps value
   const selectedLabel = React.Children.toArray(children)
-    .filter((child): child is React.ReactElement<OptionProps> => React.isValidElement(child))
+    .filter((child): child is React.ReactElement<OptionProps> =>
+      React.isValidElement(child),
+    )
     .find((child) => child.props.value === value)?.props.children;
 
   return (
-    <SelectContext.Provider value={{ value, onChange, close: () => setOpen(false) }}>
+    <SelectContext.Provider
+      value={{ value, onChange, close: () => setOpen(false) }}
+    >
       <div ref={ref} className="relative inline-block w-48">
         <button
           type="button"
@@ -78,12 +95,17 @@ function Select({ value, onChange, placeholder = "Select…", children }: Select
         </button>
 
         {/* Portal: renders the dropdown list directly on <body>, escaping any parent stacking context */}
-        {open && createPortal(
-          <ul ref={listRef} style={dropdownStyle} className="bg-white border border-gray-200 rounded shadow-lg py-1">
-            {children}
-          </ul>,
-          document.body
-        )}
+        {open &&
+          createPortal(
+            <ul
+              ref={listRef}
+              style={dropdownStyle}
+              className="bg-white border border-gray-200 rounded shadow-lg py-1"
+            >
+              {children}
+            </ul>,
+            document.body,
+          )}
       </div>
     </SelectContext.Provider>
   );
@@ -100,13 +122,20 @@ function Option({ value, disabled, children }: OptionProps) {
 
   return (
     <li
-      onClick={() => { if (!disabled) { context.onChange(value); context.close(); } }}
+      onClick={() => {
+        if (!disabled) {
+          context.onChange(value);
+          context.close();
+        }
+      }}
       className={`px-3 py-2 ${
         disabled
           ? "cursor-not-allowed opacity-40"
           : "cursor-pointer hover:bg-indigo-50"
       } ${
-        isSelected ? "bg-indigo-100 font-semibold text-indigo-700" : "text-gray-700"
+        isSelected
+          ? "bg-indigo-100 font-semibold text-indigo-700"
+          : "text-gray-700"
       }`}
     >
       {children}

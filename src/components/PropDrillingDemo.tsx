@@ -5,23 +5,29 @@ interface User {
 }
 
 export default function PropDrillingDemo() {
-
   return (
     <div className="space-y-2">
-      <HeadingWithAnchor id="prop-drilling-problem" level={2}>⛏️ Prop Drilling Problem ⛏️</HeadingWithAnchor>
-      <Component1/>
+      <HeadingWithAnchor id="prop-drilling-problem" level={2}>
+        ⛏️ Prop Drilling Problem ⛏️
+      </HeadingWithAnchor>
+      <Component1 />
     </div>
   );
 }
 
 function Component1() {
-
   const currentUser: User = { name: "Alice", role: "admin" };
 
   return (
     <div className="border rounded-lg p-4 bg-gray-50 space-y-2">
-      <p><code>{"function Component1()"}</code></p>
-      <p><code>{"const currentUser: User = { name: 'Alice', role: 'admin' };"}</code></p>
+      <p>
+        <code>{"function Component1()"}</code>
+      </p>
+      <p>
+        <code>
+          {"const currentUser: User = { name: 'Alice', role: 'admin' };"}
+        </code>
+      </p>
       <p className="text-sm italic text-gray-400">
         <code>{"<Component2 user={currentUser} />"}</code> ⬇️
       </p>
@@ -29,7 +35,6 @@ function Component1() {
     </div>
   );
 }
-
 
 function Component2({ user }: { user: User }) {
   return (

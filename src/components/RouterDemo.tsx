@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HeadingWithAnchor from "./HeadingWithAnchor";
 
-export default function RedirectCountdownDemo() {
+export default function RouterDemo() {
   const navigate = useNavigate();
   const [running, setRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(5);
@@ -47,30 +47,37 @@ export default function RedirectCountdownDemo() {
   }
 
   return (
-    <div className="card">
-      <HeadingWithAnchor id="usenavigate-example" level={2}>useNavigate() example</HeadingWithAnchor>
-      {!running ? (
-        <button
-          onClick={() => setRunning(true)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded primary-button"
-        >
-          Start 5s redirect
-        </button>
-      ) : (
-        <>
-          <p>
-            Navigating in {secondsLeft} second{secondsLeft !== 1 ? "s" : ""}…
-          </p>
-          <div className="mt-2">
-            <button
-              onClick={handleCancel}
-              className="px-3 py-1 bg-gray-300 rounded mr-2"
-            >
-              Cancel
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+    <>
+      <HeadingWithAnchor id="router" level={1}>
+        Router
+      </HeadingWithAnchor>
+      <div className="card">
+        <HeadingWithAnchor id="usenavigate-example" level={2}>
+          useNavigate() example
+        </HeadingWithAnchor>
+        {!running ? (
+          <button
+            onClick={() => setRunning(true)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded primary-button"
+          >
+            Start 5s redirect
+          </button>
+        ) : (
+          <>
+            <p>
+              Navigating in {secondsLeft} second{secondsLeft !== 1 ? "s" : ""}…
+            </p>
+            <div className="mt-2">
+              <button
+                onClick={handleCancel}
+                className="px-3 py-1 bg-gray-300 rounded mr-2"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }

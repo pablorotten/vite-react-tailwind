@@ -1,11 +1,9 @@
 import Header from "../components/Header";
 import ApplyingStyleDemo from "../components/ApplyingStyleDemo";
-import AuthInputsDemo from "../components/AuthInputsDemo";
 import ComponentCompositionAndReusabilityDemo from "../components/ComponentCompositionAndReusabilityDemo";
-import OnClickDemo from "../components/OnClickDemo";
-import UseQueryDemo from "../components/UseQueryDemo";
-import UseEffectDemo from "../components/UseEffectDemo";
-import RedirectCountdownDemo from "../components/RedirectCountdownDemo";
+import HooksControlledComponentsAndFormsDemo from "../components/HooksControlledComponentsAndFormsDemo";
+import FetchingDataDemo from "../components/UseQueryDemo";
+import RouterDemo from "../components/RouterDemo";
 import ContextApiAndPropDrillingDemo from "../components/ContextApiAndPropDrillingDemo";
 import "../App.css";
 
@@ -15,11 +13,9 @@ export default function Home() {
       <Header />
       <main>
         <ApplyingStyleDemo />
-        <OnClickDemo />
-        <AuthInputsDemo />
-        <UseEffectDemo />
-        <UseQueryDemo />
-        <RedirectCountdownDemo />
+        <HooksControlledComponentsAndFormsDemo />
+        <FetchingDataDemo />
+        <RouterDemo />
         <ContextApiAndPropDrillingDemo />
         <ComponentCompositionAndReusabilityDemo />
       </main>

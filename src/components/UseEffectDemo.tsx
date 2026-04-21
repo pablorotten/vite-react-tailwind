@@ -3,7 +3,7 @@ import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function ScreenSizeMonitorDemo() {
   const [windowWidth, setWindowWidth] = useState<number>(
-    typeof window !== "undefined" ? window.innerWidth : 0
+    typeof window !== "undefined" ? window.innerWidth : 0,
   );
 
   useEffect(() => {
@@ -21,8 +21,10 @@ export default function ScreenSizeMonitorDemo() {
   }, []);
 
   return (
-    <div className="card">
-      <HeadingWithAnchor id="useeffect-usestate-hooks" level={2}>useEffect and useState hooks</HeadingWithAnchor>
+    <>
+      <HeadingWithAnchor id="useeffect-usestate-hooks" level={2}>
+        useEffect and useState hooks
+      </HeadingWithAnchor>
       <section>
         <p>
           Your current window width is: <strong>{windowWidth}px</strong>
@@ -33,6 +35,6 @@ export default function ScreenSizeMonitorDemo() {
           <p>💻 You are on a desktop view</p>
         )}
       </section>
-    </div>
+    </>
   );
 }

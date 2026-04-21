@@ -5,7 +5,9 @@ import HeadingWithAnchor from "./HeadingWithAnchor";
 export default function PresenterPatternDemo() {
   return (
     <>
-      <HeadingWithAnchor id="presenter-pattern" level={2}>Presenter pattern</HeadingWithAnchor>
+      <HeadingWithAnchor id="presenter-pattern" level={2}>
+        Presenter pattern
+      </HeadingWithAnchor>
 
       <UserListPresenter
         render={({ users, pickRandomUsers }) => (

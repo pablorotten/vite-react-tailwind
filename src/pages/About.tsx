@@ -6,12 +6,14 @@ export default function About({ info }: { info?: string }) {
 
   return (
     <div style={{ padding: 20 }}>
-      <HeadingWithAnchor id="about" level={1}>About</HeadingWithAnchor>
+      <HeadingWithAnchor id="about" level={1}>
+        About
+      </HeadingWithAnchor>
       <p>This demo shows basic React Router usage and `useNavigate()`.</p>
       {info && (
-        <p style={{ fontStyle: 'italic', color: '#555' }}>Prop: {info}</p>
+        <p style={{ fontStyle: "italic", color: "#555" }}>Prop: {info}</p>
       )}
-      <button onClick={() => navigate('/')}>Go home</button>
+      <button onClick={() => navigate("/")}>Go home</button>
     </div>
   );
 }

@@ -14,7 +14,9 @@ export default function Header() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <HeadingWithAnchor id="vite-react" level={1}>Vite + React</HeadingWithAnchor>
+      <HeadingWithAnchor id="vite-react" level={1}>
+        Vite + React
+      </HeadingWithAnchor>
     </header>
   );
 }

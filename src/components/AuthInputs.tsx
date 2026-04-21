@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import styles from "./AuthInputs.module.css";
 
@@ -111,20 +111,20 @@ export default function AuthInputs() {
             onChange={(event) => handleInputChange("email", event.target.value)}
           />
         </p>
-          <p>
-            <MyLabel
-              $invalid={nameNotValid}
-              className={nameNotValid ? styles.invalid : undefined}
-            >
-              Name
-            </MyLabel>
-            <Input
-              $invalid={nameNotValid}
-              type="text"
-              className={nameNotValid ? styles.invalid : undefined}
-              onChange={(event) => handleInputChange("name", event.target.value)}
-            />
-          </p>
+        <p>
+          <MyLabel
+            $invalid={nameNotValid}
+            className={nameNotValid ? styles.invalid : undefined}
+          >
+            Name
+          </MyLabel>
+          <Input
+            $invalid={nameNotValid}
+            type="text"
+            className={nameNotValid ? styles.invalid : undefined}
+            onChange={(event) => handleInputChange("name", event.target.value)}
+          />
+        </p>
       </ControlContainer>
       <div className={styles.actions}>
         <button
