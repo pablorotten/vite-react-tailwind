@@ -1,9 +1,10 @@
 import AuthInputs from "./AuthInputs";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function AuthInputsDemo() {
   return (
     <div className="card">
-      <h2>‹AuthInputs /› component</h2>
+      <HeadingWithAnchor id="authinputs-component" level={2}>‹AuthInputs /› component</HeadingWithAnchor>
       <AuthInputs />
     </div>
   );

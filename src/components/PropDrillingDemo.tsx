@@ -1,3 +1,4 @@
+import HeadingWithAnchor from "./HeadingWithAnchor";
 interface User {
   name: string;
   role: "admin" | "editor" | "viewer";
@@ -7,7 +8,7 @@ export default function PropDrillingDemo() {
 
   return (
     <div className="space-y-2">
-      <h2>⛏️ Prop Drilling Problem ⛏️</h2>
+      <HeadingWithAnchor id="prop-drilling-problem" level={2}>⛏️ Prop Drilling Problem ⛏️</HeadingWithAnchor>
       <Component1/>
     </div>
   );

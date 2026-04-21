@@ -1,10 +1,11 @@
 import FlexibleCard from "./FlexibleCard";
 import UserListPresenter from "./UserListPresenter";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function PresenterPatternDemo() {
   return (
     <>
-      <h2>Presenter pattern</h2>
+      <HeadingWithAnchor id="presenter-pattern" level={2}>Presenter pattern</HeadingWithAnchor>
 
       <UserListPresenter
         render={({ users, pickRandomUsers }) => (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function ScreenSizeMonitorDemo() {
   const [windowWidth, setWindowWidth] = useState<number>(
@@ -21,7 +22,7 @@ export default function ScreenSizeMonitorDemo() {
 
   return (
     <div className="card">
-      <h2>useEffect and useState hooks</h2>
+      <HeadingWithAnchor id="useeffect-usestate-hooks" level={2}>useEffect and useState hooks</HeadingWithAnchor>
       <section>
         <p>
           Your current window width is: <strong>{windowWidth}px</strong>

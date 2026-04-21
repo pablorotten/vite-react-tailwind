@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNationalize } from "../hooks/useNationalize";
 import type { Country } from "../api/nationalize";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function UseQueryDemo() {
   const [name, setName] = useState("");
@@ -18,7 +19,7 @@ export default function UseQueryDemo() {
 
   return (
     <div className="card">
-      <h2>useQuery() example</h2>
+      <HeadingWithAnchor id="usequery-example" level={2}>useQuery() example</HeadingWithAnchor>
       <section>
         <h3 style={{ marginBottom: 12 }}>Guess countries from a name</h3>
         <form

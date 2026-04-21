@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -14,7 +15,7 @@ export default function ContextApiDemo() {
     // Defines context
     <UserContext.Provider value={null}>
       <div className="space-y-4">
-        <h2>✅ Context API Solution ✅</h2>
+            <HeadingWithAnchor id="context-api-solution" level={2}>✅ Context API Solution ✅</HeadingWithAnchor>
         <p className="text-sm italic text-gray-400">
           Defines context but user is <code>null</code>
         </p>

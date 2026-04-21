@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import "../pages/Home.css";
 import styles from "../pages/Home.module.css";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 const CSSInlineDiv = styled.div<{ $invalid?: boolean }>`
   display: flex;
@@ -28,7 +29,7 @@ const CSSInlineLabel = styled.label`
 export default function ApplyingStyleDemo() {
   return (
     <div className="card">
-      <h2>Applying style</h2>
+      <HeadingWithAnchor id="applying-style" level={2}>Applying style</HeadingWithAnchor>
       <div className="css-component-controls">
         <label className="css-component">Classic CSS Style 🚫</label>
       </div>

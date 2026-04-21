@@ -1,4 +1,5 @@
 import { useState } from "react";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function OnClickDemo() {
   const [count, setCount] = useState(0);
@@ -15,7 +16,7 @@ export default function OnClickDemo() {
 
   return (
     <div className="card">
-      <h2>Using `onClick` function in a button and dynamic `className`</h2>
+      <HeadingWithAnchor id="onclick-dynamic-classname" level={2}>Using `onClick` function in a button and dynamic `className`</HeadingWithAnchor>
       <button
         onClick={handleCount}
         className={`clear-button ${isEven ? "even" : "odd"}`}

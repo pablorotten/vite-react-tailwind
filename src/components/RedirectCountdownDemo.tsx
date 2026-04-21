@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function RedirectCountdownDemo() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function RedirectCountdownDemo() {
 
   return (
     <div className="card">
-      <h2>useNavigate() example</h2>
+      <HeadingWithAnchor id="usenavigate-example" level={2}>useNavigate() example</HeadingWithAnchor>
       {!running ? (
         <button
           onClick={() => setRunning(true)}

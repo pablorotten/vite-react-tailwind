@@ -1,6 +1,7 @@
 import reactLogo from "../assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./Header.css";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function Header() {
   return (
@@ -13,7 +14,7 @@ export default function Header() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <HeadingWithAnchor id="vite-react" level={1}>Vite + React</HeadingWithAnchor>
     </header>
   );
 }

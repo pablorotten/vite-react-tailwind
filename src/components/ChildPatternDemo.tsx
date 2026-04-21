@@ -1,10 +1,11 @@
 import AuthInputs from "./AuthInputs";
 import FlexibleCard from "./FlexibleCard";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function ChildPatternDemo() {
   return (
     <>
-        <h2>Child pattern</h2>
+        <HeadingWithAnchor id="child-pattern" level={2}>Child pattern</HeadingWithAnchor>
         <div className="space-y-3">
           <FlexibleCard title="Here &lt;FlexibleCard/&gt; children">
             <p>is a string</p>

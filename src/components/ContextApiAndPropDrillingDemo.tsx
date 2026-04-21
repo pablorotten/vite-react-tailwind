@@ -1,10 +1,11 @@
 import PropDrillingDemo from "./PropDrillingDemo";
 import ContextApiDemo from "./ContextApiDemo";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 
 export default function ContextApiAndPropDrillingDemo() {
   return (
     <>
-      <h1>Context API and Prop Drilling</h1>
+      <HeadingWithAnchor id="context-api-and-prop-drilling" level={1}>Context API and Prop Drilling</HeadingWithAnchor>
       <div className="card">
         <PropDrillingDemo />
         <ContextApiDemo />

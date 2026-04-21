@@ -1,4 +1,5 @@
 import { useState } from "react";
+import HeadingWithAnchor from "./HeadingWithAnchor";
 import FlexibleCard from "./FlexibleCard";
 import { allKitchenItems, KitchenItem } from "./kitchenItems";
 import Select from "./Select";
@@ -24,7 +25,7 @@ export default function CompoundComponentsDemo() {
 
   return (
     <div className="space-y-4">
-      <h2>Compound components pattern</h2>
+        <HeadingWithAnchor id="compound-components-pattern" level={2}>Compound components pattern</HeadingWithAnchor>
 
       {/* ── Static example: each option has totally different markup ── */}
       <FlexibleCard title="Static example — each option has completely different formatting">

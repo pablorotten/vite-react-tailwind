@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import HeadingWithAnchor from "../components/HeadingWithAnchor";
 
 export default function User() {
   const { email, name } = useParams<{ email?: string; name?: string }>();
@@ -6,7 +7,7 @@ export default function User() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>User page</h1>
+      <HeadingWithAnchor id="user-page" level={1}>User page</HeadingWithAnchor>
       <p>
         <strong>Email:</strong> {email ?? '(no email)'}
       </p>
