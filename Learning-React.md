@@ -973,6 +973,8 @@ Usage:
 
 ### Compound components pattern
 
+<img src="CompoundComponents.png" align="right" width="600">
+
 When you have elements that belong to a common parent and need to share state, you can use the compound components pattern. 
 
 - `Compound`: The parent component that manages the state and provides it to its children via context.
@@ -1017,8 +1019,6 @@ function Option({ value, children }: { value: string; children: React.ReactNode 
 ```
 
 Usage:
-<img src="CompoundComponents.png" align="right" width="500">
-
 ```tsx
 <Select>
   <Select.Option value="option1">Option 1</Select.Option>
