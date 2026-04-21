@@ -36,6 +36,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
   - [Component Composition \& Reusability](#component-composition--reusability)
     - [Component Composition via Children](#component-composition-via-children)
     - [Presenter pattern](#presenter-pattern)
+    - [Compound components pattern](#compound-components-pattern)
 
 
 ## React & TypeScript Basics
@@ -970,3 +971,61 @@ Usage:
 />
 ```
 
+### Compound components pattern
+
+When you have elements that belong to a common parent and need to share state, you can use the compound components pattern. 
+
+Typical examples in HTML are `<select>` and `<option>`. The `<option>` elements need to know which one is selected, but they don't manage that state themselves. Instead, the parent `<select>` manages the state and passes it down to the options.
+
+We can do the same in React by creating a parent component that manages the state and child components that consume that state via context.
+
+```tsx
+type SelectContextType = {
+  selectedValue: string;
+  onSelect: (value: string) => void;
+};
+
+// Context to share the selected value and the function to update it
+const SelectContext = createContext<SelectContextType>({
+  selectedValue: '',
+  onSelect: () => {},
+});
+
+export function Select({ children }: { children: React.ReactNode }) {
+  const [selectedValue, setSelectedValue] = useState('');
+
+  const handleSelect = (value: string) => {
+    setSelectedValue(value);
+  };
+
+  // Children will be the Option components
+  return (
+    <SelectContext.Provider value={{ selectedValue, onSelect: handleSelect }}>
+      <div>{children}</div>
+    </SelectContext.Provider>
+  );
+}
+
+function Option({ value, children }: { value: string; children: React.ReactNode }) {
+  // The option consumes the context to know if it's selected and to update the selected value when clicked
+  const { selectedValue, onSelect } = useContext(SelectContext);
+  const isSelected = selectedValue === value;
+
+  return (
+    <div onClick={() => onSelect(value)} style={{ fontWeight: isSelected ? 'bold' : 'normal' }}>
+      {children}
+    </div>
+  );
+}
+```
+
+Usage:
+
+```tsx
+<Select>
+  <Option value="option1">Option 1</Option>
+  {// can add whatever content we want in the option, it will be rendered as children}
+  <Option value="option2">Option 2 <span>Extra Content</span></Option>
+  <Option value="option3">Option 3</Option>
+</Select>
+```

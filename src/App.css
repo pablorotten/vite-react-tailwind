@@ -38,6 +38,13 @@ button:focus {
   text-align: center;
 }
 
+main h1 {
+  font-size: 2rem;
+  line-height: calc(1.75 / 1.25);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
 main h2 {
   font-size: 1.25rem;
   line-height: calc(1.75 / 1.25);

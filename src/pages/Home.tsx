@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import ApplyingStyleDemo from "../components/ApplyingStyleDemo";
 import AuthInputsDemo from "../components/AuthInputsDemo";
-import ComponentCompositionDemo from "../components/ComponentCompositionDemo";
+import ComponentCompositionAndReusabilityDemo from "../components/ComponentCompositionAndReusabilityDemo";
 import OnClickDemo from "../components/OnClickDemo";
 import UseQueryDemo from "../components/UseQueryDemo";
 import UseEffectDemo from "../components/UseEffectDemo";
@@ -19,7 +19,7 @@ export default function Home() {
         <UseEffectDemo />
         <UseQueryDemo />
         <RedirectCountdownDemo />
-        <ComponentCompositionDemo />
+        <ComponentCompositionAndReusabilityDemo />
       </main>
     </>
   );

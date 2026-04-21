@@ -1,4 +1,3 @@
-
 - [x] **Project Structure & File Organization**
     - Feature-based folders vs type-based folders (`components/`, `hooks/`, `pages/`).
     - Co-locating styles, tests, and types next to their component.
@@ -35,19 +34,19 @@
     - `useParams`: Read dynamic URL parameters (e.g. `/user/:id`).
     - Nested routes and shared layouts.
 
-- [ ] **Component Composition & Reusability**
-    - `children` prop for flexible wrapper components.
-    - Passing components as props (render props pattern).
-    - Compound components pattern (e.g. `<Select>` + `<Select.Option>`).
-    - When to split a component into smaller ones.
-    - Barrel files (`index.ts`) for cleaner imports.
-
 - [ ] **The Context API & Prop Drilling**
     - Prop drilling: passing data through many layers as props (the problem).
     - `createContext` + `Context.Provider`: create and provide global data.
     - `useContext`: consume context in any child component.
     - When to use context vs lifting state up vs a state library.
     - Performance: avoid unnecessary re-renders caused by context updates.
+
+- [ ] **Component Composition & Reusability**
+    - `children` prop for flexible wrapper components.
+    - Passing components as props (render props pattern).
+    - Compound components pattern (e.g. `<Select>` + `<Select.Option>`).
+    - When to split a component into smaller ones.
+    - Barrel files (`index.ts`) for cleaner imports.
 
 - [ ] **Complex State: useReducer**
     - When `useState` becomes unwieldy (many related variables that change together).
