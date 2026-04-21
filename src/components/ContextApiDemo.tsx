@@ -1,5 +1,7 @@
 import { createContext, useContext } from "react";
 import HeadingWithAnchor from "./HeadingWithAnchor";
+import contextApiGif from "../assets/ContextAPI.gif";
+import contextApi2Gif from "../assets/ContextAPI2.gif";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -35,18 +37,8 @@ function Component1() {
     // Add user to context
     <UserContext.Provider value={currentUser}>
       <div className="border rounded-lg p-4 bg-gray-50 space-y-2">
-        <p>
-          <code>{"function Component1()"}</code>
-        </p>
-
-        <p className="text-sm italic text-gray-400">
-          Stores <code>currentUser</code> in <code>Context</code>
-        </p>
-        <p>
-          <code>{"<UserContext.Provider value={currentUser}>"}</code>
-        </p>
         <img
-          src="/images/ContextAPI.gif"
+          src={contextApiGif}
           alt="Context API flow"
           style={{
             width: "100%",
@@ -104,14 +96,8 @@ function Component4() {
   return (
     <div className="border rounded-lg p-4 bg-white space-y-1">
       <code>{"function Component4()"}</code>
-      <p>
-        <code>{"const user = useContext(UserContext);"}</code>
-      </p>
-      <p className="text-sm italic text-gray-400">
-        Consumes <code>user</code> from <code>Context</code>
-      </p>
       <img
-        src="/images/ContextAPI2.gif"
+        src={contextApi2Gif}
         alt="Context API flow"
         style={{
           width: "100%",
