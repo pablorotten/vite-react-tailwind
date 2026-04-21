@@ -33,6 +33,8 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useEffect()](#useeffect)
     - [useQuery()](#usequery)
   - [Router](#router)
+  - [The Context API \& Prop Drilling](#the-context-api--prop-drilling)
+    - [⛏️ Prop Drilling problem](#️-prop-drilling-problem)
   - [Component Composition \& Reusability](#component-composition--reusability)
     - [Component Composition via Children](#component-composition-via-children)
     - [Presenter pattern](#presenter-pattern)
@@ -161,7 +163,7 @@ import Header from './components/YourComponent.tsx';
 - Style files (CSS) related to a component are typically colocated next to it using the same base name.
   - ❗Styles defined in a global CSS file will affect the whole app unless you scope them with CSS Modules.
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 Import and use it:
 ```tsx
@@ -863,11 +865,39 @@ export default function ComponentWithParams() {
 }
 ```
 
+## The Context API & Prop Drilling
+
+### ⛏️ Prop Drilling problem
+
+<img src="images/PropDrillingProblem.png" align="right" width="600" style="margin-left: 16px; margin-bottom: 16px;">
+
+When there're nested components and the `Component4` needs data from `Component1`, we have to pass that data through all the intermediate components (`Component2`, `Component3`) even if they don't need it. This is called "prop drilling" and can make the code harder to maintain.
+
+```tsx
+function Component1() {
+  const data = "Data from Component1";
+
+  return <Component2 data={data} />;
+}
+
+function Component2({ data }) {
+  return <Component3 data={data} />;
+}
+
+function Component3({ data }) {
+  return <Component4 data={data} />;
+}
+
+function Component4({ data }) {
+  return <div>{data}</div>;
+}
+```
+
 ## Component Composition & Reusability
 
 ### Component Composition via Children
 
-<img src="child.gif" align="right" width="700">
+<img src="images/child.gif" align="right" width="700" style="margin-left: 16px; margin-bottom: 16px;">
 
 Create a component that accepts `children` to create a flexible wrapper. This allows you to compose different UIs without duplicating layout styles.
 
@@ -907,7 +937,7 @@ In this case, the **parent** sends already-build UI as children. The **child** (
 
 ### Presenter pattern
 
-<img src="presenter.gif" align="right" width="600">
+<img src="images/presenter.gif" align="right" width="600" style="margin-left: 16px; margin-bottom: 16px;">
 
 A presenter component defines a behavior but not a specific UI. Doesn't know how to render itself. Is the parent who defines the UI and provide it via prop.
 
@@ -973,7 +1003,7 @@ Usage:
 
 ### Compound components pattern
 
-<img src="CompoundComponents.png" align="right" width="600">
+<img src="images/CompoundComponents.png" align="right" width="600" style="margin-left: 16px; margin-bottom: 16px;">
 
 When you have elements that belong to a common parent and need to share state, you can use the compound components pattern. 
 

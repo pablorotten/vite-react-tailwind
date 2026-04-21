@@ -6,6 +6,7 @@ import OnClickDemo from "../components/OnClickDemo";
 import UseQueryDemo from "../components/UseQueryDemo";
 import UseEffectDemo from "../components/UseEffectDemo";
 import RedirectCountdownDemo from "../components/RedirectCountdownDemo";
+import ContextApiAndPropDrillingDemo from "../components/ContextApiAndPropDrillingDemo";
 import "../App.css";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
         <UseEffectDemo />
         <UseQueryDemo />
         <RedirectCountdownDemo />
+        <ContextApiAndPropDrillingDemo />
         <ComponentCompositionAndReusabilityDemo />
       </main>
     </>
