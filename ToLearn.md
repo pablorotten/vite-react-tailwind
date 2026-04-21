@@ -41,7 +41,7 @@
     - When to use context vs lifting state up vs a state library.
     - Performance: avoid unnecessary re-renders caused by context updates.
 
-- [ ] **Component Composition & Reusability**
+- [x] **Component Composition & Reusability**
     - `children` prop for flexible wrapper components.
     - Passing components as props (render props pattern).
     - Compound components pattern (e.g. `<Select>` + `<Select.Option>`).

@@ -975,30 +975,27 @@ Usage:
 
 When you have elements that belong to a common parent and need to share state, you can use the compound components pattern. 
 
-Typical examples in HTML are `<select>` and `<option>`. The `<option>` elements need to know which one is selected, but they don't manage that state themselves. Instead, the parent `<select>` manages the state and passes it down to the options.
+- `Compound`: The parent component that manages the state and provides it to its children via context.
+- `Sub-components`: The child components that consume the state from the parent via context.
 
-We can do the same in React by creating a parent component that manages the state and child components that consume that state via context.
+> [!TIP]
+> Sub-components can use the children prop to render any content passed by the parent, making them flexible and reusable.
+
+Typical examples in HTML are `<select>` and `<option>` dropdown. We can do the same in React by creating a parent component that manages the state and child components that consume that state via context:
 
 ```tsx
-type SelectContextType = {
-  selectedValue: string;
-  onSelect: (value: string) => void;
-};
-
-// Context to share the selected value and the function to update it
-const SelectContext = createContext<SelectContextType>({
-  selectedValue: '',
-  onSelect: () => {},
-});
-
 export function Select({ children }: { children: React.ReactNode }) {
   const [selectedValue, setSelectedValue] = useState('');
 
+  // Create a context to share the selected value and the function to update it with the child components
+  const SelectContext = createContext<SelectContextValue | null>(null);
+
+  // Function to update the selected value when an option is clicked
   const handleSelect = (value: string) => {
     setSelectedValue(value);
   };
 
-  // Children will be the Option components
+  // Children will be the Option components that consume the context to know if they are selected and to update the selected value when clicked
   return (
     <SelectContext.Provider value={{ selectedValue, onSelect: handleSelect }}>
       <div>{children}</div>
@@ -1020,12 +1017,13 @@ function Option({ value, children }: { value: string; children: React.ReactNode 
 ```
 
 Usage:
+<img src="CompoundComponents.png" align="right" width="500">
 
 ```tsx
 <Select>
-  <Option value="option1">Option 1</Option>
+  <Select.Option value="option1">Option 1</Select.Option>
   {// can add whatever content we want in the option, it will be rendered as children}
-  <Option value="option2">Option 2 <span>Extra Content</span></Option>
-  <Option value="option3">Option 3</Option>
+  <Select.Option value="option2">Option 2 <span>Extra Content</span></Select.Option>
+  <Select.Option value="option3">Option 3</Select.Option>
 </Select>
 ```
