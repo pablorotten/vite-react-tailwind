@@ -35,6 +35,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
   - [Router](#router)
   - [The Context API \& Prop Drilling](#the-context-api--prop-drilling)
     - [⛏️ Prop Drilling problem](#️-prop-drilling-problem)
+    - [☁️ Context API](#️-context-api)
   - [Component Composition \& Reusability](#component-composition--reusability)
     - [Component Composition via Children](#component-composition-via-children)
     - [Presenter pattern](#presenter-pattern)
@@ -889,6 +890,40 @@ function Component3({ data }) {
 }
 
 function Component4({ data }) {
+  return <div>{data}</div>;
+}
+```
+
+### ☁️ Context API
+
+The Context API allows you to share data across the component tree without having to pass props down manually at every level. You create a context, provide it at a high level in the component tree, and then consume it in any child component that needs it.
+
+```tsx
+import React, { createContext, useContext } from 'react';
+// Create a context with a default value
+const MyContext = createContext("Default Value");
+function Component1() {
+  const data = "Data from Component1";
+
+  // Provide the context value to the component tree
+  return (
+    <MyContext.Provider value={data}>
+      <Component2 />
+    </MyContext.Provider>
+  );
+}
+
+function Component2() {
+  return <Component/>;
+}
+
+function Component3({ data }) {
+  return <Component4/>;
+}
+
+function Component4() {
+  // Consume the context value in Component4 without prop drilling
+  const data = useContext(MyContext);   
   return <div>{data}</div>;
 }
 ```
