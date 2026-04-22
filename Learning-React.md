@@ -700,6 +700,7 @@ With `useReducer()` we can manage all the related states and functions in a sing
 * There's one single function `reducer()` that updates the state based on the action type
 * The logic of the different functions dealing with state updates are now `Actions`
 * The reducer function takes the current state and an action, execute the right logic in a switch and returns the new state
+* What was calling the functions in `useState()` is now dispatching actions to the reducer function
 
 ```tsx
 import { useReducer } from "react";

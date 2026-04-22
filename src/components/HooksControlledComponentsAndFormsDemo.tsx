@@ -3,6 +3,7 @@ import HeadingWithAnchor from "./HeadingWithAnchor";
 import AuthInputs from "./AuthInputs";
 import UseEffectDemo from "./UseEffectDemo";
 import UseReducerDemo from "./UseReducerDemo";
+import UseMemoDemo from "./UseMemoDemo";
 
 export default function HooksControlledComponentsAndFormsDemo() {
   const [count, setCount] = useState(0);
@@ -33,6 +34,7 @@ export default function HooksControlledComponentsAndFormsDemo() {
         <AuthInputs />
         <UseEffectDemo />
         <UseReducerDemo />
+        <UseMemoDemo />
       </div>
     </>
   );
