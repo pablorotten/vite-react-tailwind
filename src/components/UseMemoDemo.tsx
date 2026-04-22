@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import HeadingWithAnchor from "./HeadingWithAnchor";
 
 const buttonBaseClass =
@@ -64,6 +64,10 @@ const ParentNoMemo = () => {
     setChild2(Math.floor(Math.random() * 100) + 1);
   };
 
+  // Plain function: new reference on every render → memo on Child3 won't help
+  const resetParent = () => {
+    setParent(0);
+  };
 
   const double = () => {
     console.log("double function recomputed");
@@ -74,7 +78,7 @@ const ParentNoMemo = () => {
 
   return (
     <>
-      <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <CounterCard
           label="Parent"
           value={parent}
@@ -83,6 +87,7 @@ const ParentNoMemo = () => {
         />
         <Child1NoMemo value={child1} />
         <Child2NoMemo value={child2} />
+        <Child3NoMemo onReset={resetParent} />
       </div>
       <div className="mt-3 mb-3 flex flex-wrap gap-2">
         <button
@@ -132,6 +137,24 @@ const Child2NoMemo = ({ value }: { value: number }) => {
   );
 };
 
+// memo won't help here: resetParent is a new function reference on every parent render
+const Child3NoMemo = memo(({ onReset }: { onReset: () => void }) => {
+  console.log("ChildNoMemo 3 rerendered");
+
+  return (
+    <div className="rounded-lg border border-red-300 bg-red-100 p-3 text-center shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-wide opacity-75">Child 3</p>
+      <p className="mt-1 text-xs opacity-80">useCallback</p>
+      <button
+        onClick={onReset}
+        className="mt-2 rounded border border-red-400 bg-white px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-50"
+      >
+        Reset Parent
+      </button>
+    </div>
+  );
+});
+
 // Using memo and useMemo to avoid unnecessary re-renders and computations in Parent and Child components
 const ParentMemo = () => {
   const [parent, setParent] = useState(0);
@@ -150,6 +173,11 @@ const ParentMemo = () => {
     setChild2(Math.floor(Math.random() * 100) + 1);
   };
 
+  // useCallback: stable function reference → memo on Child3 prevents unnecessary re-renders
+  const resetParent = useCallback(() => {
+    setParent(0);
+  }, []);
+
   // useMemo: only recomputes when `parent` changes, not when child1/child2 change
   const double = useMemo(() => {
     console.log("double function recomputed");
@@ -160,7 +188,7 @@ const ParentMemo = () => {
 
   return (
     <>
-      <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <CounterCard
           label="Parent"
           value={parent}
@@ -169,6 +197,7 @@ const ParentMemo = () => {
         />
         <Child1Memo value={child1} />
         <Child2Memo value={child2} />
+        <Child3Memo onReset={resetParent} />
       </div>
       <div className="mt-3 mb-3 flex flex-wrap gap-2">
         <button
@@ -215,5 +244,23 @@ const Child2Memo = memo(({ value }: { value: number }) => {
       value={value}
       accentClass="border-teal-300 bg-teal-100"
     />
+  );
+});
+
+// memo + useCallback: stable reference → this child only re-renders if onReset itself changes (it won't)
+const Child3Memo = memo(({ onReset }: { onReset: () => void }) => {
+  console.log("ChildMemo 3 rerendered");
+
+  return (
+    <div className="rounded-lg border border-blue-300 bg-blue-100 p-3 text-center shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-wide opacity-75">Child 3</p>
+      <p className="mt-1 text-xs opacity-80">useCallback</p>
+      <button
+        onClick={onReset}
+        className="mt-2 rounded border border-blue-400 bg-white px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50"
+      >
+        Reset Parent
+      </button>
+    </div>
   );
 });

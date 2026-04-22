@@ -32,6 +32,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useEffect()](#useeffect)
     - [useQuery()](#usequery)
     - [memo and useMemo()](#memo-and-usememo)
+    - [useCallback()](#usecallback)
   - [Router](#router)
   - [The Context API \& Prop Drilling](#the-context-api--prop-drilling)
     - [⛏️ Prop Drilling problem](#️-prop-drilling-problem)
@@ -914,11 +915,14 @@ When there's a Parent with Childs (sibling) components, and the Parent define ea
 
 With `memo` and `useMemo()` we can optimize the rendering of the components by memoizing them. This means that React will only re-render the component if its props change.
 
+* `memo`: Only re-render if the props change.
+* `useMemo()`: Only re-run the function if the dependencies change. For example if a Parent renrenders beacuase a Child changes, we don't need to recalculate a Parent function
+
 
 In this example:
-* If `setParent()` is called --> Only Parent re-renders
-* If `setChild1()` is called --> Child1 and Parent re-renders
-* If `setChild2()` is called --> Child2 and Parent re-renders
+* If `setParent()` is called --> Only `Parent` re-renders and `heavyComputation` is re-calculated
+* If `setChild1()` is called --> `Child1`, `Parent` re-renders but `heavyComputation` is not re-calculated because `parentState` didn't change
+* If `setChild2()` is called --> `Child2`, `Parent` re-renders but `heavyComputation` is not re-calculated because `parentState` didn't change
 ```tsx
 const Parent = () => {
   const [parentState, setParent] = useState(0);
@@ -928,12 +932,14 @@ const Parent = () => {
   const updateParent = () => setParent(...)
   const updateChild1 = () => setChild1(...)
   const updateChild2 = () => setChild2(...)
+  const heavyComputation = useMemo(() => { ... }, [parentState]);
 
   console.log("Parent re-rendered");
 
   return (
     <div>
       <button onClick={() => setParent((p) => p + 1)}>Parent: {parentState}</button>
+      <>
       <Child1 count={child1State} onUpdate={updateChild1} />
       <Child2 count={child2State} onUpdate={updateChild2} />
     </div>
@@ -961,6 +967,54 @@ const Child2 = React.memo(({ count, onUpdate }) => {
   );
 });
 
+```
+
+### useCallback()
+
+If a parent shares a function (callback) with a child component, even if the Child is memoized, it will re-render every time the Parent re-renders because the function is re-created on every render. With `useCallback()` we can memoize the function and only re-create it if its dependencies change:
+
+✨ Parent re-renders ✨
+
+**Without `useCallback`:**
+* new `resetParent` function object is created in memory
+* `memo` compares old vs new prop: `setParent(0)` !== ✨`setParent(0)`✨  
+* ❌ Different references
+* ❌ Child 3 re-renders
+  
+**With `useCallback`:**
+* new `resetParent` function object is created in memory
+* `useCallback()` returns a memoized version of the function that only changes if its dependencies change. 
+* Since there are no dependencies, it will always return the same function object from memory.
+* **React** returns the same function object from memory (no new one is created)
+* `memo` compares old vs new prop → `resetParent` === ✨`resetParent`✨ 
+* ✅ Same reference
+* ✅ Child 3 skips re-render
+
+```tsx
+const Parent = () => {
+  const [parentState, setParent] = useState(0);
+  const resetParent = useCallback(() => setParent(0), []); // No dependencies, so it will always return the same function object from memory
+
+  console.log("Parent re-rendered");
+
+  return (
+    <div>
+      <button onClick={() => setParent((p) => p + 1)}>Parent: {parentState}</button>
+      <Child onReset={resetParent} />
+    </div>
+  );
+};
+
+const Child = React.memo(({ onReset }) => {
+
+  console.log("Child re-rendered");
+
+  return (
+    <div>
+      <button onClick={onReset}>Reset Parent</button>
+    </div>
+  );
+});
 ```
 
 
