@@ -28,7 +28,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
   - [Hooks](#hooks)
     - [Custom Hooks](#custom-hooks)
     - [useState()](#usestate)
-    - [useRef()](#useref)
+    - [useReducer()](#usereducer)
     - [useEffect()](#useeffect)
     - [useQuery()](#usequery)
   - [Router](#router)
@@ -275,10 +275,23 @@ Use props by passing parameters directly or by using the JS spread operator `...
 `App.tsx`
 
 ```tsx
-<ul>
-  <CoreConcept title="title" description="description" image="image.png" />
-  <CoreConcept {...CORE_CONCEPTS[0]} />
-</ul>
+// data.ts
+export const CORE_CONCEPTS = [
+  {title: "Components", description: "Reusable UI building blocks.", image: "/images/components.png", },
+  {title: "Props", description: "Inputs passed from parent to child.", image: "/images/props.png", },
+  {title: "State", description: "Data that changes over time in a component.", image: "/images/state.png", },
+];
+
+// App.tsx
+export default function App() {
+  return (
+    <ul>
+      <CoreConcept title="Manual title" description="Manual description" image="/images/manual.png" />
+
+      {/* Spread version, it passes the properties of the CORE_CONCEPTS[0] object as props (title="Components", description="Reusable UI ...) */}
+      <CoreConcept {...CORE_CONCEPTS[0]} />
+    </ul>
+  );
 ```
 
 ### Component composition
@@ -641,6 +654,105 @@ function App() {
 > [!WARNING]
 > An `useState()` function declared in a component will always trigger a re-render even if is not explicity use in the Component DOM (the `return (...)` statement).
 > **This could be the source of some performance issues.**
+
+### useReducer()
+
+When you have to handle multiple `useState()` hooks used in different functions or complex logic it can be a mess quickly:
+```tsx
+// 3 useState() hooks to manage
+const [count, setCount] = useState(0);
+const [step, setStep] = useState(1);
+const [clicks, setClicks] = useState(0);
+
+// 4 different functions to update the states
+function incrementWithState() {
+  setCount((previousCount) => previousCount + step);
+  setClicks((previousClicks) => previousClicks + 1);
+}
+
+function decrementWithState() {
+  setCount((previousCount) => previousCount - step);
+  setClicks((previousClicks) => previousClicks + 1);
+}
+
+function resetWithState() {
+  setCount(0);
+  setStep(1);
+  setClicks(0);
+}
+
+function randomizeStepWithState() {
+  setCount(Math.floor(Math.random() * 100) + 1);
+  setStep(Math.floor(Math.random() * 100) + 1);
+  setClicks(Math.floor(Math.random() * 100) + 1);
+}
+
+// Then use them
+<button onClick={incrementWithState}>Increment</button
+<button onClick={decrementWithState}>Decrement</button
+<button onClick={resetWithState}>Reset</button
+<button onClick={randomizeStepWithState}>Randomize</button
+}
+```
+
+With `useReducer()` we can manage all the related states and functions in a single place using a switch statement.
+* All the states are in a single object `state`
+* There's one single function `reducer()` that updates the state based on the action type
+* The logic of the different functions dealing with state updates are now `Actions`
+* The reducer function takes the current state and an action, execute the right logic in a switch and returns the new state
+
+```tsx
+import { useReducer } from "react";
+type CounterState = {
+  count: number;
+  step: number;
+  clicks: number;
+};
+
+type CounterAction =
+  | { type: "increment" }
+  | { type: "decrement" }
+  | { type: "reset" }
+  | { type: "change_step"; value: number };
+
+// All the  functions handling different `useState()` are now cases of the switch statement in the reducer function
+function reducer(state: CounterState, action: CounterAction): CounterState {
+  switch (action.type) {
+    case "increment":
+      return {
+        ...state,
+        count: state.count + state.step,
+        clicks: state.clicks + 1,
+      };
+    case "decrement":
+      return {
+        ...state,
+        count: state.count - state.step,
+        clicks: state.clicks + 1,
+      };
+    case "reset":
+      return {
+        count: 0,
+        step: 1,
+        clicks: 0,
+      };
+    case "randomize":
+      return {
+        count: Math.floor(Math.random() * 100) + 1,
+        step: Math.floor(Math.random() * 100) + 1,
+        clicks: Math.floor(Math.random() * 100) + 1,
+      };
+    default:
+      throw new Error("Unknown action type");
+  }
+}
+
+// Then use them
+<button onClick={() => dispatch({ type: "increment" })}>Increment</button>
+<button onClick={() => dispatch({ type: "decrement" })}>Decrement</button>
+<button onClick={() => dispatch({ type: "reset" })}>Reset</button>
+<button onClick={() => dispatch({ type: "randomize" })}>Randomize</button>  
+```tsx
 
 ### useRef()
 

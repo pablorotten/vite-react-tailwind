@@ -2,18 +2,14 @@ import { useState } from "react";
 import HeadingWithAnchor from "./HeadingWithAnchor";
 import AuthInputs from "./AuthInputs";
 import UseEffectDemo from "./UseEffectDemo";
+import UseReducerDemo from "./UseReducerDemo";
 
 export default function HooksControlledComponentsAndFormsDemo() {
   const [count, setCount] = useState(0);
-  const [isEven, setIsEven] = useState(false);
+  const isEven = count % 2 === 0;
 
   function handleCount() {
-    setCount((count) => count + 1);
-    handleIsEven();
-  }
-
-  function handleIsEven() {
-    setIsEven(count % 2 === 0);
+    setCount((previousCount) => previousCount + 1);
   }
 
   return (
@@ -36,6 +32,7 @@ export default function HooksControlledComponentsAndFormsDemo() {
         </HeadingWithAnchor>
         <AuthInputs />
         <UseEffectDemo />
+        <UseReducerDemo />
       </div>
     </>
   );

@@ -48,7 +48,7 @@
   - When to split a component into smaller ones.
   - Barrel files (`index.ts`) for cleaner imports.
 
-- [ ] **Complex State: useReducer**
+- [x] **Complex State: useReducer**
   - When `useState` becomes unwieldy (many related variables that change together).
   - `useReducer(reducer, initialState)` returns `[state, dispatch]`.
   - Actions: plain objects with a `type` field (e.g. `{ type: 'RESET_FORM' }`).
