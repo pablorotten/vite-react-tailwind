@@ -31,6 +31,7 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [useReducer()](#usereducer)
     - [useEffect()](#useeffect)
     - [useQuery()](#usequery)
+    - [memo and useMemo()](#memo-and-usememo)
   - [Router](#router)
   - [The Context API \& Prop Drilling](#the-context-api--prop-drilling)
     - [⛏️ Prop Drilling problem](#️-prop-drilling-problem)
@@ -905,6 +906,63 @@ export async function fetchMyData(query: string): Promise<ResponeData> {
   return response.json();
 }
 ```
+### memo and useMemo()
+
+<img src="images/useMemo.gif" align="right" width="600" style="margin-left: 16px; margin-bottom: 16px;">
+
+When there's a Parent with Childs (sibling) components, and the Parent define each state of the Childs. Every time either the Parent or one of the Childs re-render,  the whole Tree re-render and this can cause performance issues.
+
+With `memo` and `useMemo()` we can optimize the rendering of the components by memoizing them. This means that React will only re-render the component if its props change.
+
+
+In this example:
+* If `setParent()` is called --> Only Parent re-renders
+* If `setChild1()` is called --> Child1 and Parent re-renders
+* If `setChild2()` is called --> Child2 and Parent re-renders
+```tsx
+const Parent = () => {
+  const [parentState, setParent] = useState(0);
+  const [child1State, setChild1] = useState(0);
+  const [child2State, setChild2] = useState(0);
+
+  const updateParent = () => setParent(...)
+  const updateChild1 = () => setChild1(...)
+  const updateChild2 = () => setChild2(...)
+
+  console.log("Parent re-rendered");
+
+  return (
+    <div>
+      <button onClick={() => setParent((p) => p + 1)}>Parent: {parentState}</button>
+      <Child1 count={child1State} onUpdate={updateChild1} />
+      <Child2 count={child2State} onUpdate={updateChild2} />
+    </div>
+  );
+
+const Child1 = React.memo(({ count, onUpdate }) => {
+
+  console.log("Child1 re-rendered");
+
+  return (
+    <div>
+      <button onClick={onUpdate}>Child1: {count}</button>
+    </div>
+  );
+}); 
+
+const Child2 = React.memo(({ count, onUpdate }) => {
+
+  console.log("Child2 re-rendered");
+
+  return (
+    <div>
+      <button onClick={onUpdate}>Child2: {count}</button>
+    </div>
+  );
+});
+
+```
+
 
 ## Router
 
