@@ -45,6 +45,16 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
     - [Component Composition via Children](#component-composition-via-children)
     - [Presenter pattern](#presenter-pattern)
     - [Compound components pattern](#compound-components-pattern)
+  - [The Testing Stack (Vitest \& Testing Library)](#the-testing-stack-vitest--testing-library)
+    - [Vitest installation and setup](#vitest-installation-and-setup)
+    - [userEvent](#userevent)
+    - [Testing a component](#testing-a-component)
+    - [Good practices for testing React components](#good-practices-for-testing-react-components)
+      - [What to test first](#what-to-test-first)
+      - [What you can skip (or test indirectly)](#what-you-can-skip-or-test-indirectly)
+      - [Focus on behavior, not implementation](#focus-on-behavior-not-implementation)
+      - [Mocking API calls and modules: what is the point?](#mocking-api-calls-and-modules-what-is-the-point)
+      - [Practical checklist](#practical-checklist)
 
 ## React & TypeScript Basics
 
@@ -1373,3 +1383,214 @@ Usage:
   <Select.Option value="option3">Option 3</Select.Option>
 </Select>
 ```
+
+## The Testing Stack (Vitest & Testing Library)
+### Vitest installation and setup
+Vitest is a testing framework that runs tests in a Node environment. It provides a test runner, an assertion library, and a mocking library. It's similar to Jest but faster and more lightweight.
+
+Installation:
+
+Add those packages to your project:
+
+```bash
+npm install -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event
+```
+
+This will install:
+- `vitest`: The test runner and assertion library.
+- `@testing-library/react`: A library for testing React components by simulating user interactions and asserting on the rendered output.
+- `@testing-library/jest-dom`: Provides custom Jest matchers for asserting on DOM nodes
+- `@testing-library/user-event`: Simulates user interactions like clicks, typing, etc.
+
+### userEvent
+
+`userEvent` is a utility from `@testing-library/user-event` that allows you to simulate user interactions in your tests. It provides methods for simulating clicks, typing, and other events on DOM elements.
+
+Usage:
+```tsx
+import userEvent from "@testing-library/user-event";
+// Create a userEvent instance
+const user = userEvent.setup();
+// Simulate a click on a button
+await user.click(screen.getByRole("button", { name: "Submit" }));
+// Simulate typing into an input field
+await user.type(screen.getByLabelText("Username"), "myusername");
+``` 
+
+### Testing a component
+
+To test a React component, we can use `@testing-library/react` to render the component and interact with it as a user would. We can then use assertions to check if the component behaves as expected.
+
+Given a `Component` you want to test, you can create a test file `Component.test.tsx` next to it and write your tests there.
+
+For this compound component `ButtonGroup` with `Option` sub-components, we want to test that when we click on an option, it becomes selected and the previous selected option becomes unselected.
+
+```tsx
+import React, { createContext, useContext } from "react";
+
+type ButtonGroupContextValue = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+const ButtonGroupContext = createContext<ButtonGroupContextValue | null>(null);
+
+type ButtonGroupProps = {
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+};
+
+type OptionProps = {
+  value: string;
+  children: React.ReactNode;
+};
+
+function ButtonGroup({ value, onChange, children }: ButtonGroupProps) {
+  return (
+    <ButtonGroupContext.Provider value={{ value, onChange }}>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </ButtonGroupContext.Provider>
+  );
+}
+
+function Option({ value, children }: OptionProps) {
+  const context = useContext(ButtonGroupContext);
+
+  if (!context) {
+    throw new Error("ButtonGroup.Option must be used inside <ButtonGroup>");
+  }
+
+  const isSelected = context.value === value;
+
+  return (
+    <button
+      type="button"
+      onClick={() => context.onChange(value)}
+      className={`px-3 py-1 rounded border transition-colors ${
+        isSelected
+          ? "bg-indigo-600 text-white border-indigo-600"
+          : "bg-white text-gray-700 border-gray-300 hover:border-indigo-400"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+ButtonGroup.Option = Option;
+
+export default ButtonGroup;
+```
+
+And the test file `ButtonGroup.test.tsx`:
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+import ButtonGroup from "./ButtonGroup";
+
+describe("ButtonGroup", () => {
+  it("renders options and highlights the selected one", () => {
+    render(
+      <ButtonGroup value="react" onChange={vi.fn()}>
+        <ButtonGroup.Option value="react">React</ButtonGroup.Option>
+        <ButtonGroup.Option value="vue">Vue</ButtonGroup.Option>
+      </ButtonGroup>,
+    );
+
+    expect(screen.getByRole("button", { name: "React" })).toHaveClass(
+      "bg-indigo-600",
+    );
+    expect(screen.getByRole("button", { name: "Vue" })).toHaveClass(
+      "bg-white",
+    );
+  });
+
+  it("calls onChange with the clicked option value", async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+
+    render(
+      <ButtonGroup value="react" onChange={handleChange}>
+        <ButtonGroup.Option value="react">React</ButtonGroup.Option>
+        <ButtonGroup.Option value="vue">Vue</ButtonGroup.Option>
+      </ButtonGroup>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Vue" }));
+
+    expect(handleChange).toHaveBeenCalledWith("vue");
+    expect(handleChange).toHaveBeenCalledTimes(1);
+  });
+
+  it("throws if an option is rendered outside the group", () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    expect(() => {
+      render(<ButtonGroup.Option value="react">React</ButtonGroup.Option>);
+    }).toThrow("ButtonGroup.Option must be used inside <ButtonGroup>");
+
+    consoleError.mockRestore();
+  });
+});
+```
+
+In this test file, we have three test cases:
+1. **Renders options and highlights the selected one**: We render the `ButtonGroup` with two options and check that the selected option has the correct class to indicate it's selected.
+2. **Calls onChange with the clicked option value**: We render the `ButtonGroup` with a mock `onChange` function, simulate a click on an option, and check that the `onChange` function was called with the correct value.
+3. **Throws if an option is rendered outside the group**: We check that if we try to render an `Option` outside of a `ButtonGroup`, it throws the expected error.
+
+### Good practices for testing React components
+
+You don't need to test every component. Test the most important behaviors at the right level.
+
+#### What to test first
+
+1. Critical user flows (forms, routing, data loading, error states).
+2. Components with conditional logic and branching behavior.
+3. Custom hooks and utility functions that contain business logic.
+
+#### What you can skip (or test indirectly)
+
+- Tiny presentational components with no logic and no interactions.
+- Internal implementation details (private helper functions inside a component).
+
+If a small component is already covered by a higher-level integration test, a separate unit test is often unnecessary.
+
+#### Focus on behavior, not implementation
+
+- Assert what a user can see and do.
+- Prefer accessible queries like `getByRole`, `getByLabelText`, and visible text.
+- Avoid assertions tied to internal state variables.
+
+#### Mocking API calls and modules: what is the point?
+
+In frontend tests, mocking is usually **not** about validating real backend endpoints.
+
+It is used to:
+
+1. Keep tests fast (no real network).
+2. Keep tests reliable (no flaky failures due to network/server issues).
+3. Isolate UI logic (test component behavior only).
+4. Force scenarios on demand (success, error, empty response, timeout).
+
+With mocks, you can verify that your component correctly handles:
+
+- loading state
+- success rendering
+- error UI
+- function calls and arguments
+
+To validate real backend endpoints, use backend tests, integration tests against a real/test server, or end-to-end tests.
+
+#### Practical checklist
+
+- Arrange: render with required providers (router, context, query client, etc.).
+- Act: simulate user actions with `userEvent`.
+- Assert: verify visible behavior and side effects.
+- Keep test names explicit: `shows error when request fails`.
+- Keep tests independent: each test should pass regardless of execution order.
