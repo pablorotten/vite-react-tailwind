@@ -55,6 +55,10 @@ https://nside.udemy.com/course/react-the-complete-guide-incl-redux/
       - [Focus on behavior, not implementation](#focus-on-behavior-not-implementation)
       - [Mocking API calls and modules: what is the point?](#mocking-api-calls-and-modules-what-is-the-point)
       - [Practical checklist](#practical-checklist)
+    - [Running tests (local and CI)](#running-tests-local-and-ci)
+      - [Local commands and when to use each](#local-commands-and-when-to-use-each)
+      - [npm test vs npx vitest](#npm-test-vs-npx-vitest)
+      - [Do tests run automatically on GitHub or Vercel?](#do-tests-run-automatically-on-github-or-vercel)
 
 ## React & TypeScript Basics
 
@@ -1594,3 +1598,86 @@ To validate real backend endpoints, use backend tests, integration tests against
 - Assert: verify visible behavior and side effects.
 - Keep test names explicit: `shows error when request fails`.
 - Keep tests independent: each test should pass regardless of execution order.
+
+### Running tests (local and CI)
+
+#### Local commands and when to use each
+
+Use this workflow:
+
+1. During development (watch mode):
+
+```bash
+npm test
+```
+
+2. Interactive test dashboard:
+
+```bash
+npm run test:ui
+```
+
+3. One full pass before commit/push:
+
+```bash
+npm run test:run
+```
+
+4. Run a single file while working on it:
+
+```bash
+npm run test:run -- src/components/ButtonGroup.test.tsx
+```
+
+Recommended pre-push check:
+
+```bash
+npm run lint
+npm run test:run
+npm run build
+```
+
+#### npm test vs npx vitest
+
+Both usually run the same local Vitest binary, but they are not exactly the same entry point:
+
+- `npm test` runs the `test` script from `package.json`.
+- `npx vitest` runs Vitest directly.
+
+In this project, `npm test` maps to `vitest`, so behavior is effectively the same in normal usage.
+
+Prefer `npm test` (and `npm run test:run`) for team consistency and CI scripts.
+
+#### Do tests run automatically on GitHub or Vercel?
+
+Not by default.
+
+- **GitHub**: tests run automatically only if you add a GitHub Actions workflow.
+- **Vercel**: builds/deploys automatically, but does not run your whole test suite unless you explicitly wire tests into build/CI.
+
+To enforce automated checks, add a GitHub Action that runs lint + tests on `push` and `pull_request`, then make that check required before merge.
+
+Minimal example (`.github/workflows/ci.yml`):
+
+```yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:run
+      - run: npm run build
+```
